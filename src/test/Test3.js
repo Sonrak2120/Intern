@@ -104,17 +104,17 @@ function Test3() {
       split_: split,
       degree_p: degree,
       freq: freq,
-      file_zip: filezip,
+      file: filezip,
     };
     let formdata = new FormData();
     formdata.append("split_", split);
     formdata.append("degree_p", degree);
     formdata.append("freq", freq);
-    formdata.append("file_zip", filezip);
+    formdata.append("file", filezip);
     let bodyContent = formdata;
     const reqOptions = await axios({
-      url: "http://127.0.0.1:5000/new-site-survey",
-      method: "GET",
+      url: "http://127.0.0.1:5000/read_ris_file",
+      method: "POST",
       headers: headersList,
       data: bodyContent,
     });
@@ -150,76 +150,7 @@ function Test3() {
   return (
     <div>
       {console.log(dataplot.polar_plot)}
-      {/* {console.log("types= ", types.val)} */}
-      {/* <div style={{ marginTop: "20px" }}>
-        <Grid2 container justifyContent="center" spacing={6}>
-          <Grid2>
-            <PolarChart
-              id="chart"
-              dataSource={dataplot.polar_plot}
-              title="Polar Plot"
-            >
-              <Size height={580} width={600} />
-              <CommonSeriesSettings type="line" />
-              {types.map((item) => (
-                <Series key={item.val} valueField={item.val} name={item.name}>
-                  {" "}
-                  <Point symbol="circle" size={6} />
-                </Series>
-              ))}
-              <Tooltip enabled={true} />
-              <ArgumentAxis
-                inverted={true}
-                startAngle={90}
-                tickInterval={45}
-                period={360}
-                title="dBm"
-              />
-              <Export enabled={true} />
-              <Legend visible={false} />
-            </PolarChart>
-          </Grid2>
-          <Grid2>
-            <Chart palette="Violet" dataSource={dataplot.cart_plot}>
-              <Size height={580} width={600} />
-              <CommonSeriesSettings argumentField="cart_degree" type="line" />
-              {types.map((item) => (
-                <Series key={item.val} valueField={item.val} name={item.name}>
-                  <Point symbol="circle" size={6} />
-                </Series>
-              ))}
-              <ValueAxis
-                title="dBm"
-                //   linearThreshold={-3}
-                // type="logarithmic"
-                pane="top"
-              />
 
-              <Margin bottom={20} />
-              <ArgumentAxis
-                title="Degree"
-                valueMarginsEnabled={false}
-                discreteAxisDivisionMode="crossLabels"
-                // inverted={true}
-                tickInterval={30}
-              >
-                <Grid visible={true}></Grid>
-              </ArgumentAxis>
-              <Legend
-                verticalAlignment="bottom"
-                horizontalAlignment="center"
-                itemTextPosition="bottom"
-              />
-              <Export enabled={true} />
-              <Legend visible={false} />
-              <Title text="Catrsian Plot">
-              </Title>
-              <Tooltip enabled={true} />
-            </Chart>
-          </Grid2>
-        </Grid2>
-      </div> */}
-      {/* <Test2 /> */}
       <div
         style={{
           display: "flex",
@@ -250,48 +181,6 @@ function Test3() {
                   spacing={{ xs: 1, sm: 2, md: 2 }}
                   sx={{ mt: 5 }}
                 >
-                  <Controller
-                    render={({ field: { onChange } }) => (
-                      <TextField
-                        sx={{ width: "450px" }}
-                        id="split"
-                        label="Split"
-                        onChange={(e) => setsplit(e.target.value)}
-                        required
-                      />
-                    )}
-                    name="split"
-                    control={control}
-                    defaultValue=""
-                  />
-                  <Controller
-                    render={({ field: { onChange } }) => (
-                      <TextField
-                        sx={{ width: "450px" }}
-                        id="degree"
-                        label="ตำแหน่ง(องศา)"
-                        onChange={(e) => setdegree(e.target.value)}
-                        required
-                      />
-                    )}
-                    name="degree"
-                    control={control}
-                    defaultValue=""
-                  />
-                  <Controller
-                    render={({ field: { onChange } }) => (
-                      <TextField
-                        sx={{ width: "450px" }}
-                        id="freq"
-                        label="ความถี่"
-                        onChange={(e) => setfreq(e.target.value)}
-                        required
-                      />
-                    )}
-                    name="freq"
-                    control={control}
-                    defaultValue=""
-                  />
                   <Controller
                     render={({ field: { onChange } }) => (
                       <Box className="box2" sx={{ width: "450px" }}>

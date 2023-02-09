@@ -22,9 +22,57 @@ const TextFieldCustom = styled(TextField)(({ them }) => ({
   },
 }));
 
-const Loreflector = 5;
-
 function SiteSurvay() {
+  const [open, setOpen] = React.useState(false);
+
+  const [filezip, setfilxls] = useState("");
+  const handleUploadxlxs = (e) => {
+    const fileupload = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setfilxls(fileupload);
+    };
+    reader.readAsDataURL(fileupload);
+  };
+  // console.log("data_ris", filezip);
+
+  const handledownload = () => {
+    var a = document.createElement("a");
+    a.href = window.URL.createObjectURL(filezip);
+    a.download = filezip.name;
+    a.click();
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const uploadfile = async (event) => {
+    setOpen(false);
+
+    let headersList = {
+      Accept: "*/*",
+    };
+    var data = {
+      file: filezip,
+    };
+    let formdata = new FormData();
+    formdata.append("file", filezip);
+    let bodyContent = formdata;
+    const reqOptions = await axios({
+      url: "http://127.0.0.1:5000/read_ris_file",
+      method: "POST",
+      headers: headersList,
+      data: bodyContent,
+    });
+    let response = reqOptions;
+    console.log(response.data);
+    // setData(response.data);
+  };
+
   const {
     handleSubmit,
     control,
@@ -56,63 +104,43 @@ function SiteSurvay() {
   const [N_UE, setN_UE] = React.useState([]);
   const [ue_an, setue_an] = React.useState([]);
   const [dataplot, setData] = React.useState("");
+
   const handleSubmits = async (event) => {
     let headersList = {
-      Accept: "application / json",
+      Accept: "application/json",
     };
     var data = {
-      x_BS: x_BS,
-      z_BS: z_BS,
-      x_IRS: x_IRS,
-      y_IRS: y_IRS,
-      z_IRS: z_IRS,
-      lightspeed: lightspeed,
-      fc: fc,
-      bs_an: bs_an,
+      x_BS: parseFloat(x_BS),
+      y_BS: parseFloat(y_BS),
+      z_BS: parseFloat(z_BS),
+      x_IRS: parseFloat(x_IRS),
+      y_IRS: parseFloat(y_IRS),
+      z_IRS: parseFloat(z_IRS),
+      lightspeed: parseFloat(lightspeed),
+      fc: parseFloat(fc),
+      bs_an: parseFloat(bs_an),
       DSC_type: DSC_type,
       IRS_type: IRS_type,
-      N_cp: N_cp,
-      Lc: Lc,
-      Lp: Lp,
-      As: As,
-      NSD: NSD,
-      iterMax: iterMax,
-      Np_IRS_set: Np_IRS_set,
-      Ptx_dBm: Ptx_dBm,
-      n_elm: n_elm,
-      Bw: Bw,
-      N_UE: N_UE,
-      ue_an: ue_an,
+      N_cp: parseFloat(N_cp),
+      Lc: parseFloat(Lc),
+      Lp: parseFloat(Lp),
+      As: parseFloat(As),
+      K_f_dB: parseFloat(K_f_dB),
+      NSD: parseFloat(NSD),
+      iterMax: parseFloat(iterMax),
+      Np_IRS_set: parseFloat(Np_IRS_set),
+      Ptx_dBm: parseFloat(Ptx_dBm),
+      n_elm: parseFloat(n_elm),
+      Bw: parseFloat(Bw),
+      N_UE: parseFloat(N_UE),
+      ue_an: parseFloat(ue_an),
     };
-    let formdata = new FormData();
-    formdata.append("x_BS", x_BS);
-    formdata.append("z_BS", z_BS);
-    formdata.append("x_IRS", x_IRS);
-    formdata.append("y_IRS", y_IRS);
-    formdata.append("z_IRS", z_IRS);
-    formdata.append("lightspeed", lightspeed);
-    formdata.append("fc", fc);
-    formdata.append("bs_an", bs_an);
-    formdata.append("DSC_type", DSC_type);
-    formdata.append("IRS_type", IRS_type);
-    formdata.append("N_cp", N_cp);
-    formdata.append("Lc", Lc);
-    formdata.append("Lp", Lp);
-    formdata.append("As", As);
-    formdata.append("K_f_dB", K_f_dB);
-    formdata.append("NSD", NSD);
-    formdata.append("iterMax", iterMax);
-    formdata.append("Np_IRS_set", Np_IRS_set);
-    formdata.append("Ptx_dBm", Ptx_dBm);
-    formdata.append("n_elm", n_elm);
-    formdata.append("Bw", Bw);
-    formdata.append("N_UE", N_UE);
-    formdata.append("ue_an", ue_an);
 
-    let bodyContent = formdata;
+    let bodyContent = data;
+
     const reqOptions = await axios({
       url: "http://127.0.0.1:5000/new-site-survey",
-      method: "GET",
+      method: "POST",
       headers: headersList,
       data: bodyContent,
     });
@@ -131,7 +159,7 @@ function SiteSurvay() {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "center",
+            // justifyContent: "center",
             alignItems: "center",
             // backgroundColor: "GrayText",
             padding: "10px",
@@ -474,10 +502,94 @@ function SiteSurvay() {
                   control={control}
                   defaultValue=""
                 />
+                <Controller
+                  render={({ field: { onChange } }) => (
+                    <Box className="box2" sx={{ width: "450px" }}>
+                      <p style={{ color: "red" }}>*ไฟล์ .xlsx</p>
+                      <Button
+                        style={{ minWidth: "100%", marginTop: "16px" }}
+                        variant="contained"
+                        component="label"
+                      >
+                        เลือกไฟล์
+                        <input
+                          hidden
+                          accept=".xlsx"
+                          multiple
+                          type="file"
+                          onChange={handleUploadxlxs}
+                          required
+                        />
+                      </Button>
+                      <div style={{ display: "flex" }}>
+                        {(() => {
+                          if (filezip == "") {
+                            return (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  color: "red",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  textAlign: "center",
+                                  margin: "auto",
+                                  marginTop: "16px",
+                                }}
+                              >
+                                <p>ยังไม่เลือกไฟล์</p>
+                              </div>
+                            );
+                          } else {
+                            return (
+                              <div
+                                style={{
+                                  // display: "flex",
+                                  color: "green",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  textAlign: "center",
+                                  margin: "auto",
+                                  marginTop: "16px",
+                                }}
+                              >
+                                <Button
+                                  onClick={handledownload}
+                                  variant="outlined"
+                                >
+                                  {"ตรวจสอบไฟล์ : "}
+                                  {filezip.name}
+                                </Button>
+                                <Button
+                                  onClick={uploadfile}
+                                  variant="contained"
+                                >
+                                  {"Process"}
+                                </Button>
+                                <Typography style={{ marginTop: "16px" }}>
+                                  {" "}
+                                  {"เวลาแก้ไขไฟล์ล่าสุด : "}
+                                  {filezip.lastModifiedDate
+                                    .toString()
+                                    .substring(0, 25)}
+                                </Typography>
+                              </div>
+                            );
+                          }
+                        })()}
+                      </div>
+                    </Box>
+                  )}
+                  name="departID"
+                  control={control}
+                  defaultValue=""
+                />
               </Stack>
+
+              <Button variant="contained" type="submit" sx={{ mt: "20px" }}>
+                Process
+              </Button>
             </Box>
           </Stack>
-          <Button type="submit">Process</Button>
         </Box>
       </form>
       {/* {console.log(zz)} */}
