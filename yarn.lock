@@ -10125,6 +10125,11 @@ react-error-overlay@^5.1.4:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-5.1.6.tgz#0cd73407c5d141f9638ae1e0c63e7b2bf7e9929d"
   integrity sha512-X1Y+0jR47ImDVr54Ab6V9eGk0Hnu7fVWGeHQSOXHf/C2pF9c6uy3gef8QUeuUiWlNb0i08InPSE5a/KJzNzw1Q==
 
+react-heatmap-grid@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/react-heatmap-grid/-/react-heatmap-grid-0.9.0.tgz#cf33ef491ae098bad5e857316e8ed0ae14718317"
+  integrity sha512-kJ+aHrNoyrzDTI09UyAEDORdRGc4iAyqii3liCNx3hs/Gg80baSpukiG/Wyoz3fR1Mr9+dzswXlC9Vl2SLQeDg==
+
 react-hook-form@^7.41.5:
   version "7.41.5"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.41.5.tgz#dcd0e7438c15044eadc99df6deb889da5858a03b"

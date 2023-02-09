@@ -563,7 +563,7 @@ function SiteSurvay() {
                                   onClick={uploadfile}
                                   variant="contained"
                                 >
-                                  {"Process"}
+                                  {"IMPORT"}
                                 </Button>
                                 <Typography style={{ marginTop: "16px" }}>
                                   {" "}
