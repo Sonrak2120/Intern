@@ -11,7 +11,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
-// import { dataSource } from "./data";
 import service from "./data";
 
 import { createSlice } from "@reduxjs/toolkit";
@@ -45,8 +44,8 @@ import {
 import Stack from "@mui/material/Stack";
 import { TextField, Typography } from "@mui/material";
 
-const dataSource = service.getdataSource();
-const dg2 = service.getdg();
+// const dataSource = service.getdataSource();
+// const dg2 = service.getdg();
 export const types = [{ val: "dBm", name: "dBm" }];
 
 function Plot() {
@@ -123,7 +122,7 @@ function Plot() {
       data: bodyContent,
     });
     let response = reqOptions;
-    // console.log(response.data);
+    console.log(response.data);
     setData(response.data);
     if (reqOptions.data.message == "File uploaded successfully") {
       setOpen2(true);

@@ -22,6 +22,32 @@ const TextFieldCustom = styled(TextField)(({ them }) => ({
 
 const Loreflector = 5;
 
+export function Model(props) {
+  const { nodes, materials } = useGLTF("/room_uv.gltf");
+  return (
+    <group {...props} dispose={null}>
+      <mesh
+        geometry={nodes.Cylinder.geometry}
+        material={materials["Material.003"]}
+        position={[-81, 10.58, 80]}
+        scale={[0.4, 10.57, 0.4]}
+      />
+      <mesh
+        geometry={nodes.Plane002.geometry}
+        material={nodes.Plane002.material}
+        position={[-81, 0, 0]}
+        scale={[20, 1, 81]}
+      />
+      <mesh
+        geometry={nodes.Plane003.geometry}
+        material={materials.Material}
+        position={[20, 0, 0]}
+        scale={[81, 1, 81]}
+      />
+    </group>
+  );
+}
+
 function Room() {
   //////////////////////////////////////////
   const [x, setx] = useState(null);
@@ -59,91 +85,6 @@ function Room() {
   ////////////////////////////////////////
   ////////////////////////////////////////
 
-  function Model(props) {
-    const { nodes, materials } = useGLTF("/demo.glb");
-    return (
-      <group {...props} dispose={null} scale={1}>
-        <group
-          position={[x, y, z]}
-          rotation={[0, -Math.PI / 2, 0]}
-          scale={0.25}
-        >
-          <mesh
-            geometry={nodes.Cube005.geometry}
-            material={materials["Material.001"]}
-            position={[0.57, 10.32, -0.12]}
-            rotation={[xx, yy, -Math.PI / zz]}
-            scale={[3, 0.05, 3]}
-          />
-          <mesh
-            geometry={nodes.Cylinder.geometry}
-            material={materials["Material.002"]}
-            position={[0, 5.25, 0]}
-            scale={[0.5, 5, 0.5]}
-          />
-        </group>
-        <group
-          position={[10, 0, 0]}
-          rotation={[0, Math.PI / 2, 0]}
-          scale={0.25}
-        >
-          <mesh
-            geometry={nodes.Cylinder001.geometry}
-            material={materials["Material.002"]}
-            position={[0, 5.25, 0]}
-            scale={[0.25, 5, 0.25]}
-          />
-          <mesh
-            geometry={nodes.Cube006.geometry}
-            material={materials["Material.003"]}
-            position={[4.81, 11.25, 0]}
-            scale={[6, 1, 1]}
-          />
-          <mesh
-            geometry={nodes.Sphere.geometry}
-            material={materials["Material.002"]}
-            position={[0, 10.61, 0]}
-            scale={0.5}
-          />
-        </group>
-        <mesh
-          geometry={nodes.Cube.geometry}
-          material={nodes.Cube.material}
-          position={[10.7, 2.6, -25.45]}
-          rotation={[Math.PI / 2, 0, 0]}
-          scale={[15, 0.03, 2.5]}
-        />
-        <mesh
-          geometry={nodes.Cube001.geometry}
-          material={nodes.Cube001.material}
-          position={[10.72, 0.05, -10.46]}
-          scale={[15, 0.03, 15]}
-        />
-        <mesh
-          geometry={nodes.Cube002.geometry}
-          material={nodes.Cube002.material}
-          position={[-4.25, 2.53, -10.44]}
-          rotation={[Math.PI / 2, 0, -Math.PI / 2]}
-          scale={[15, 0.03, 2.5]}
-        />
-        <mesh
-          geometry={nodes.Cube003.geometry}
-          material={nodes.Cube003.material}
-          position={[10.72, 2.53, 4.5]}
-          rotation={[Math.PI / 2, 0, 0]}
-          scale={[15, 0.03, 2.5]}
-        />
-        <mesh
-          geometry={nodes.Cube004.geometry}
-          material={nodes.Cube004.material}
-          position={[25.7, 2.53, -10.44]}
-          rotation={[Math.PI / 2, 0, -Math.PI / 2]}
-          scale={[15, 0.03, 2.5]}
-        />
-      </group>
-    );
-  }
-
   return (
     <div className="wrapper2">
       <div className="wrapper">
@@ -153,8 +94,16 @@ function Room() {
         >
           <Suspense fallback={null}>
             <ambientLight />
-            <directionalLight intensity={0.75} position={[50, 50, 50]} />
-            <directionalLight intensity={0.75} position={[-50, -50, -50]} />
+            <directionalLight
+              position={[1, 1, 1]}
+              intensity={0.75}
+              lookAt={[20, -20, 20]}
+            />
+            <directionalLight
+              position={[-1, 0, -1]}
+              intensity={0.75}
+              lookAt={[20, -20, 20]}
+            />
             <Model />
             <OrbitControls
               enablePan={true}

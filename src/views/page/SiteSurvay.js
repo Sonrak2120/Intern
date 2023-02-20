@@ -7,9 +7,40 @@ import TextField from "@mui/material/TextField";
 import { styled, Button } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
+import ColorMap from "../model/ColorMap";
 
 import "../../App.css";
 import { Box, Stack, Typography } from "@mui/material";
+import Progess from "../../assets/global/Progress";
+
+import {
+  Chart,
+  Series,
+  ArgumentAxis,
+  CommonSeriesSettings,
+  CommonAxisSettings,
+  Export,
+  Legend,
+  Margin,
+  Title,
+  Subtitle,
+  Tooltip,
+  Grid,
+  Label,
+  ValueAxis,
+  Point,
+  Size,
+  Format,
+} from "devextreme-react/chart";
+// import service from "../data2";
+import service from "../page/data";
+import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
+
+const countriesInfo = service.getCountriesInfo();
+const energySources = service.getEnergySources();
+// const types = ["line", "stackedline", "fullstackedline"];
+export const types = [{ val: "SSE", name: "SSE" }];
+export const types2 = [{ val: "PRx", name: "PRx" }];
 
 const TextFieldCustom = styled(TextField)(({ them }) => ({
   "& .css-1m3yc3-MuiInputBase-root-MuiOutlinedInput-root": {
@@ -24,6 +55,7 @@ const TextFieldCustom = styled(TextField)(({ them }) => ({
 
 function SiteSurvay() {
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const [filezip, setfilxls] = useState("");
   const handleUploadxlxs = (e) => {
@@ -34,7 +66,7 @@ function SiteSurvay() {
     };
     reader.readAsDataURL(fileupload);
   };
-  // console.log("data_ris", filezip);
+  // console.log("data_ris", da);
 
   const handledownload = () => {
     var a = document.createElement("a");
@@ -52,6 +84,7 @@ function SiteSurvay() {
   };
   const uploadfile = async (event) => {
     setOpen(false);
+    setLoading(true);
 
     let headersList = {
       Accept: "*/*",
@@ -69,8 +102,9 @@ function SiteSurvay() {
       data: bodyContent,
     });
     let response = reqOptions;
-    console.log(response.data);
-    // setData(response.data);
+    // console.log(response.data.data_ris);
+    setdata_ris(response.data.data_ris);
+    setLoading(false);
   };
 
   const {
@@ -103,9 +137,11 @@ function SiteSurvay() {
   const [Bw, setBw] = React.useState([]);
   const [N_UE, setN_UE] = React.useState([]);
   const [ue_an, setue_an] = React.useState([]);
+  const [data_ris, setdata_ris] = React.useState([]);
   const [dataplot, setData] = React.useState("");
 
   const handleSubmits = async (event) => {
+    setLoading(true);
     let headersList = {
       Accept: "application/json",
     };
@@ -134,7 +170,10 @@ function SiteSurvay() {
       Bw: parseFloat(Bw),
       N_UE: parseFloat(N_UE),
       ue_an: parseFloat(ue_an),
+      data_ris: data_ris,
     };
+
+    // console.log(data_ris);
 
     let bodyContent = data;
 
@@ -146,8 +185,10 @@ function SiteSurvay() {
     });
     let response = reqOptions;
     console.log(response.data);
+    setLoading(false);
     setData(response.data);
   };
+  console.log("dataplot==", dataplot);
 
   const onSubmit = (data) => {
     handleSubmits(data);
@@ -155,120 +196,55 @@ function SiteSurvay() {
 
   return (
     <div className="wrapper2">
+      <Progess load={loading} />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box
-          sx={{
+        <div
+          style={{
             display: "flex",
-            // justifyContent: "center",
+            justifyContent: "center",
             alignItems: "center",
-            // backgroundColor: "GrayText",
+            backgroundColor: "GrayText",
             padding: "10px",
           }}
         >
-          <Stack direction="row" spacing={2}>
-            {/* แผ่นสะท้อน */}
-
-            <Box
-              sx={{
-                margin: "auto",
-                backgroundColor: "white",
-                padding: "10px",
-                borderRadius: "7px",
-                height: "100%",
-                width: "100%",
-              }}
+          <Grid2
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={10}
+          >
+            <Grid2
+              container
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+              spacing={10}
             >
-              <Typography
-                sx={{
-                  color: "black",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  display: "flex",
-                  marginBottom: "10px",
-                }}
-              >
-                Parameter Channel
-              </Typography>
-              <Stack spacing={1.5}>
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="x_BS"
-                      label="x_BS"
-                      onChange={(e) => setx_BS(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="x_BS"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="y_BS"
-                      label="y_BS"
-                      onChange={(e) => sety_BS(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="y_BS"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="z_BS"
-                      label="z_BS"
-                      onChange={(e) => setz_BS(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="z_BS"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="x_IRS"
-                      label="x_IRS"
-                      onChange={(e) => setx_IRS(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="x_IRS"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="y_IRS"
-                      label="y_IRS"
-                      onChange={(e) => sety_IRS(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="y_IRS"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="z_IRS"
-                      label="z_IRS"
-                      onChange={(e) => setz_IRS(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="z_IRS"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
+              <Grid2>
+                <Box
+                  sx={{
+                    margin: "auto",
+                    backgroundColor: "white",
+                    padding: "10px",
+                    borderRadius: "7px",
+                    height: "100%",
+                    width: "100%",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      color: "black",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      display: "flex",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    Parameter Main
+                  </Typography>
+                  <Stack spacing={1.5}>
+                    {/* <Controller
                   render={({ field: { onChange } }) => (
                     <TextFieldCustom
                       id="lightspeed"
@@ -280,319 +256,545 @@ function SiteSurvay() {
                   name="lightspeed"
                   control={control}
                   defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="fc"
-                      label="fc"
-                      onChange={(e) => setfc(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="fc"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="bs_an"
-                      label="bs_an"
-                      onChange={(e) => setbs_an(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="bs_an"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="DSC_type"
-                      label="DSC_type"
-                      onChange={(e) => setDSC_type(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="DSC_type"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="IRS_type"
-                      label="IRS_type"
-                      onChange={(e) => setIRS_type(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="IRS_type"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="N_cp"
-                      label="N_cp"
-                      onChange={(e) => setN_cp(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="N_cp"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="Lc"
-                      label="Lc"
-                      onChange={(e) => setLc(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="Lc"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="Lp"
-                      label="Lp"
-                      onChange={(e) => setLp(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="Lp"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="As"
-                      label="As"
-                      onChange={(e) => setAs(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="As"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="K_f_dB"
-                      label="K_f_dB"
-                      onChange={(e) => setK_f_dB(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="K_f_dB"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="NSD"
-                      label="NSD"
-                      onChange={(e) => setNSD(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="NSD"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="iterMax"
-                      label="iterMax"
-                      onChange={(e) => setiterMax(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="iterMax"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="Np_IRS_set"
-                      label="Np_IRS_set"
-                      onChange={(e) => setNp_IRS_set(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="Np_IRS_set"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="Ptx_dBm"
-                      label="Ptx_dBm"
-                      onChange={(e) => setPtx_dBm(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="Ptx_dBm"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="n_elm"
-                      label="n_elm"
-                      onChange={(e) => setn_elm(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="n_elm"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="Bw"
-                      label="Bw"
-                      onChange={(e) => setBw(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="Bw"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="N_UE"
-                      label="N_UE"
-                      onChange={(e) => setN_UE(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="N_UE"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="ue_an"
-                      label="ue_an"
-                      onChange={(e) => setue_an(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="ue_an"
-                  control={control}
-                  defaultValue=""
-                />
-                <Controller
-                  render={({ field: { onChange } }) => (
-                    <Box className="box2" sx={{ width: "450px" }}>
-                      <p style={{ color: "red" }}>*ไฟล์ .xlsx</p>
-                      <Button
-                        style={{ minWidth: "100%", marginTop: "16px" }}
-                        variant="contained"
-                        component="label"
-                      >
-                        เลือกไฟล์
-                        <input
-                          hidden
-                          accept=".xlsx"
-                          multiple
-                          type="file"
-                          onChange={handleUploadxlxs}
+                /> */}
+                    <Controller
+                      render={({ field: { onChange } }) => (
+                        <TextFieldCustom
+                          id="fc"
+                          label="Carrier Frequency"
+                          onChange={(e) => setfc(e.target.value)}
                           required
                         />
-                      </Button>
-                      <div style={{ display: "flex" }}>
-                        {(() => {
-                          if (filezip == "") {
-                            return (
-                              <div
-                                style={{
-                                  display: "flex",
-                                  color: "red",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  textAlign: "center",
-                                  margin: "auto",
-                                  marginTop: "16px",
-                                }}
-                              >
-                                <p>ยังไม่เลือกไฟล์</p>
-                              </div>
-                            );
-                          } else {
-                            return (
-                              <div
-                                style={{
-                                  // display: "flex",
-                                  color: "green",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  textAlign: "center",
-                                  margin: "auto",
-                                  marginTop: "16px",
-                                }}
-                              >
-                                <Button
-                                  onClick={handledownload}
-                                  variant="outlined"
-                                >
-                                  {"ตรวจสอบไฟล์ : "}
-                                  {filezip.name}
-                                </Button>
-                                <Button
-                                  onClick={uploadfile}
-                                  variant="contained"
-                                >
-                                  {"IMPORT"}
-                                </Button>
-                                <Typography style={{ marginTop: "16px" }}>
-                                  {" "}
-                                  {"เวลาแก้ไขไฟล์ล่าสุด : "}
-                                  {filezip.lastModifiedDate
-                                    .toString()
-                                    .substring(0, 25)}
-                                </Typography>
-                              </div>
-                            );
-                          }
-                        })()}
-                      </div>
-                    </Box>
-                  )}
-                  name="departID"
-                  control={control}
-                  defaultValue=""
-                />
-              </Stack>
+                      )}
+                      name="fc"
+                      control={control}
+                      defaultValue=""
+                    />
+                  </Stack>
+                </Box>
+              </Grid2>
 
-              <Button variant="contained" type="submit" sx={{ mt: "20px" }}>
-                Process
-              </Button>
-            </Box>
-          </Stack>
-        </Box>
+              <Grid2>
+                <Box
+                  sx={{
+                    margin: "auto",
+                    backgroundColor: "white",
+                    padding: "10px",
+                    borderRadius: "7px",
+                    height: "100%",
+                    width: "100%",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      color: "black",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      display: "flex",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    Parameter Base
+                  </Typography>
+                  <Stack spacing={1.5}>
+                    <Controller
+                      render={({ field: { onChange } }) => (
+                        <TextFieldCustom
+                          id="bs_an"
+                          label="Number of antena"
+                          onChange={(e) => setbs_an(e.target.value)}
+                          required
+                        />
+                      )}
+                      name="bs_an"
+                      control={control}
+                      defaultValue=""
+                    />
+                  </Stack>
+                </Box>
+              </Grid2>
+            </Grid2>
+            <Grid2>
+              <Box
+                sx={{
+                  margin: "auto",
+                  backgroundColor: "white",
+                  padding: "10px",
+                  borderRadius: "7px",
+                  height: "100%",
+                  width: "100%",
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: "black",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    display: "flex",
+                    marginBottom: "10px",
+                  }}
+                >
+                  Parameter Channel
+                </Typography>
+                <Stack spacing={1.5}>
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="x_BS"
+                        label="x_BS"
+                        onChange={(e) => setx_BS(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="x_BS"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="y_BS"
+                        label="y_BS"
+                        onChange={(e) => sety_BS(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="y_BS"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="z_BS"
+                        label="z_BS"
+                        onChange={(e) => setz_BS(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="z_BS"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="x_IRS"
+                        label="x_IRS"
+                        onChange={(e) => setx_IRS(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="x_IRS"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="y_IRS"
+                        label="y_IRS"
+                        onChange={(e) => sety_IRS(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="y_IRS"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="z_IRS"
+                        label="z_IRS"
+                        onChange={(e) => setz_IRS(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="z_IRS"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="DSC_type"
+                        label="Dedicated subcarriers type"
+                        onChange={(e) => setDSC_type(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="DSC_type"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="IRS_type"
+                        label="Reconfigurable smart surface type"
+                        onChange={(e) => setIRS_type(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="IRS_type"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="N_cp"
+                        label="N_cp"
+                        onChange={(e) => setN_cp(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="N_cp"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="Lc"
+                        label="Number of Nlos Lc"
+                        onChange={(e) => setLc(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="Lc"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="Lp"
+                        label="Number of Nlos Lp "
+                        onChange={(e) => setLp(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="Lp"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="As"
+                        label="Angle Spread"
+                        onChange={(e) => setAs(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="As"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="K_f_dB"
+                        label="K_f_dB"
+                        onChange={(e) => setK_f_dB(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="K_f_dB"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="NSD"
+                        label="Noise power Spectral density "
+                        onChange={(e) => setNSD(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="NSD"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="iterMax"
+                        label="Maximum Iteration"
+                        onChange={(e) => setiterMax(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="iterMax"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="Np_IRS_set"
+                        label="Np_IRS_set"
+                        onChange={(e) => setNp_IRS_set(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="Np_IRS_set"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="Ptx_dBm"
+                        label="Ptx_dBm"
+                        onChange={(e) => setPtx_dBm(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="Ptx_dBm"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="n_elm"
+                        label="n_elm"
+                        onChange={(e) => setn_elm(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="n_elm"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="Bw"
+                        label="Bandwidth"
+                        onChange={(e) => setBw(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="Bw"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="N_UE"
+                        label="N_UE"
+                        onChange={(e) => setN_UE(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="N_UE"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <TextFieldCustom
+                        id="ue_an"
+                        label="ue_an"
+                        onChange={(e) => setue_an(e.target.value)}
+                        required
+                      />
+                    )}
+                    name="ue_an"
+                    control={control}
+                    defaultValue=""
+                  />
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <Box className="box2" sx={{ width: "450px" }}>
+                        <p style={{ color: "red" }}>*ไฟล์ .xlsx</p>
+                        <Button
+                          style={{ minWidth: "100%", marginTop: "16px" }}
+                          variant="contained"
+                          component="label"
+                        >
+                          เลือกไฟล์
+                          <input
+                            hidden
+                            accept=".xlsx"
+                            multiple
+                            type="file"
+                            onChange={handleUploadxlxs}
+                            required
+                          />
+                        </Button>
+                        <div style={{ display: "flex" }}>
+                          {(() => {
+                            if (filezip == "") {
+                              return (
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    color: "red",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    textAlign: "center",
+                                    margin: "auto",
+                                    marginTop: "16px",
+                                  }}
+                                >
+                                  <p>ยังไม่เลือกไฟล์</p>
+                                </div>
+                              );
+                            } else {
+                              return (
+                                <div
+                                  style={{
+                                    // display: "flex",
+                                    color: "green",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    textAlign: "center",
+                                    margin: "auto",
+                                    marginTop: "16px",
+                                  }}
+                                >
+                                  <Button
+                                    onClick={handledownload}
+                                    variant="outlined"
+                                  >
+                                    {"ตรวจสอบไฟล์ : "}
+                                    {filezip.name}
+                                  </Button>
+                                  <Button
+                                    onClick={uploadfile}
+                                    variant="contained"
+                                  >
+                                    {"IMPORT"}
+                                  </Button>
+                                  <Typography style={{ marginTop: "16px" }}>
+                                    {" "}
+                                    {"เวลาแก้ไขไฟล์ล่าสุด : "}
+                                    {filezip.lastModifiedDate
+                                      .toString()
+                                      .substring(0, 25)}
+                                  </Typography>
+                                </div>
+                              );
+                            }
+                          })()}
+                        </div>
+                      </Box>
+                    )}
+                    name="departID"
+                    control={control}
+                    defaultValue=""
+                  />
+                </Stack>
+
+                <Button variant="contained" type="submit" sx={{ mt: "20px" }}>
+                  Process
+                </Button>
+              </Box>
+            </Grid2>
+          </Grid2>
+        </div>
       </form>
+      <Chart
+        palette="Violet"
+        dataSource={dataplot.data_prx}
+        title="Received Power(dBm)"
+        style={{
+          backgroundColor: "white",
+          margin: "auto",
+        }}
+      >
+        <CommonSeriesSettings
+          argumentField="distance"
+          type="spline"
+          color="#E600FD"
+        />
+        <CommonAxisSettings>
+          <Grid visible={true} />
+        </CommonAxisSettings>
+        {types2.map((item) => (
+          <Series key={item.val} valueField={item.val} name={item.name} />
+        ))}
+        <Margin bottom={20} />
+
+        <ValueAxis
+          title="PRx"
+          //   linearThreshold={-3}
+          // type="logarithmic"
+          pane="top"
+        />
+
+        <ArgumentAxis allowDecimals={false} axisDivisionFactor={60} title="SNR">
+          {/* <Label>
+                <Format type="decimal" />
+              </Label> */}
+        </ArgumentAxis>
+        <Legend
+          verticalAlignment="bottom"
+          horizontalAlignment="center"
+          itemTextPosition="bottom"
+        />
+        <Export enabled={true} />
+        <Legend visible={false} />
+        <Tooltip enabled={true} />
+      </Chart>
+      <Chart
+        palette="Violet"
+        dataSource={dataplot.data_spectral_efficiency}
+        style={{
+          backgroundColor: "white",
+          margin: "auto",
+        }}
+      >
+        {/* <Size height={580} width={800} /> */}
+        <CommonSeriesSettings argumentField="SNR" type="line" color="#16DA34" />
+        {types.map((item) => (
+          <Series key={item.val} valueField={item.val} name={item.name}>
+            {" "}
+            <Point symbol="circle" size={6} />
+          </Series>
+        ))}
+        <ValueAxis
+          title="SSE"
+          //   linearThreshold={-3}
+          // type="logarithmic"
+          pane="top"
+        />
+
+        <Margin bottom={20} />
+        <ArgumentAxis
+          title="SNR"
+          valueMarginsEnabled={false}
+          discreteAxisDivisionMode="crossLabels"
+          // inverted={true}
+          tickInterval={2}
+        >
+          <Grid visible={true}></Grid>
+        </ArgumentAxis>
+        <Legend
+          verticalAlignment="bottom"
+          horizontalAlignment="center"
+          itemTextPosition="bottom"
+        />
+        <Export enabled={true} />
+        <Legend visible={false} />
+        <Title text="Spectral Efficiency">
+          {/* <Subtitle text="(Millions of Tons, Oil Equivalent)" /> */}
+        </Title>
+        <Tooltip enabled={true} />
+      </Chart>
+
       {/* {console.log(zz)} */}
+
+      {/* <Stack>
+          <ColorMap />
+        </Stack> */}
     </div>
   );
 }
