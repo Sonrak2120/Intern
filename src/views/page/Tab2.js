@@ -7,10 +7,13 @@ import TextField from "@mui/material/TextField";
 import { styled, Button } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
+import IconButton from "@mui/material/IconButton";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 
-import "../App.css";
+import "../../App.css";
 import { Box, Stack, Typography } from "@mui/material";
-import Progess from "../assets/global/Progress";
+import Progess from "../../assets/global/Progress";
 
 import {
   Chart,
@@ -32,14 +35,14 @@ import {
   Format,
 } from "devextreme-react/chart";
 // import service from "../data2";
-import service from "../views/page/data";
+import service from "../page/data";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 
 const countriesInfo = service.getCountriesInfo();
 const energySources = service.getEnergySources();
 // const types = ["line", "stackedline", "fullstackedline"];
 export const types = [{ val: "SSE", name: "SSE" }];
-export const types2 = [{ val: "PRx", name: "PRx" }];
+export const types2 = [{ val: "se", name: "se" }];
 
 const TextFieldCustom = styled(TextField)(({ them }) => ({
   "& .css-1m3yc3-MuiInputBase-root-MuiOutlinedInput-root": {
@@ -52,33 +55,7 @@ const TextFieldCustom = styled(TextField)(({ them }) => ({
   },
 }));
 
-// export function Model(props) {
-//   const { nodes, materials } = useGLTF("/room_uv.gltf");
-//   return (
-//     <group {...props} dispose={null}>
-//       <mesh
-//         geometry={nodes.Cylinder.geometry}
-//         material={materials["Material.003"]}
-//         position={[-81, 10.58, 80]}
-//         scale={[0.4, 10.57, 0.4]}
-//       />
-//       <mesh
-//         geometry={nodes.Plane002.geometry}
-//         material={nodes.Plane002.material}
-//         position={[-81, 0, 0]}
-//         scale={[20, 1, 81]}
-//       />
-//       <mesh
-//         geometry={nodes.Plane003.geometry}
-//         material={materials.Material}
-//         position={[20, 0, 0]}
-//         scale={[81, 1, 81]}
-//       />
-//     </group>
-//   );
-// }
-
-function SiteSurvay() {
+function Tab2() {
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
@@ -128,7 +105,7 @@ function SiteSurvay() {
     });
     let response = reqOptions;
     // console.log(response.data.data_ris);
-    setdata_ris(response.data.data_ris);
+    // setdata_ris(response.data.data_ris);
     setLoading(false);
   };
 
@@ -158,12 +135,30 @@ function SiteSurvay() {
   const [iterMax, setiterMax] = React.useState([]);
   const [Np_IRS_set, setNp_IRS_set] = React.useState([]);
   const [Ptx_dBm, setPtx_dBm] = React.useState([]);
-  const [n_elm, setn_elm] = React.useState([]);
+  const [size, setSize] = useState([0]);
   const [Bw, setBw] = React.useState([]);
   const [N_UE, setN_UE] = React.useState([]);
   const [ue_an, setue_an] = React.useState([]);
   const [data_ris, setdata_ris] = React.useState([]);
   const [dataplot, setData] = React.useState("");
+
+  const [input, setInput] = useState([0]);
+
+  const OnbtnUpClick = () => {
+    if (input.length < 10) {
+      setInput([...input, input[input.length - 1] + 1]);
+      setSize([...size, 0]);
+    }
+  };
+
+  const OnbtnDelClick = () => {
+    const temp = input;
+    const temp2 = size;
+    if (temp.length > 1) temp.pop();
+    temp2.pop();
+    setInput([...temp]);
+    setSize([...temp2]);
+  };
 
   const handleSubmits = async (event) => {
     setLoading(true);
@@ -191,19 +186,19 @@ function SiteSurvay() {
       iterMax: parseFloat(iterMax),
       Np_IRS_set: parseFloat(Np_IRS_set),
       Ptx_dBm: parseFloat(Ptx_dBm),
-      n_elm: parseFloat(n_elm),
+      size: size,
       Bw: parseFloat(Bw),
       N_UE: parseFloat(N_UE),
       ue_an: parseFloat(ue_an),
-      data_ris: data_ris,
+      // data_ris: data_ris,
     };
 
-    // console.log(data_ris);
+    console.log(typeof size);
 
     let bodyContent = data;
 
     const reqOptions = await axios({
-      url: "http://127.0.0.1:5000/new-site-survey",
+      url: "http://127.0.0.1:5000/compare-ris-size",
       method: "POST",
       headers: headersList,
       data: bodyContent,
@@ -635,13 +630,6 @@ function SiteSurvay() {
                       defaultValue=""
                     />
                   </Stack>
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    sx={{ width: "100%" }}
-                  >
-                    Process
-                  </Button>
                 </Box>
               </Grid2>
               <Grid2>
@@ -680,19 +668,7 @@ function SiteSurvay() {
                       control={control}
                       defaultValue=""
                     />
-                    <Controller
-                      render={({ field: { onChange } }) => (
-                        <TextFieldCustom
-                          id="n_elm"
-                          label="Size"
-                          onChange={(e) => setn_elm(e.target.value)}
-                          required
-                        />
-                      )}
-                      name="n_elm"
-                      control={control}
-                      defaultValue=""
-                    />
+
                     <Controller
                       render={({ field: { onChange } }) => (
                         <TextFieldCustom
@@ -708,91 +684,80 @@ function SiteSurvay() {
                     />
                     <Controller
                       render={({ field: { onChange } }) => (
-                        <Box className="box2" sx={{ width: "100%" }}>
-                          <p style={{ color: "red" }}>
-                            **import phase value(0-360) .xlsx file
-                          </p>
-                          <Button
-                            style={{ width: "100%", marginTop: "16px" }}
-                            variant="contained"
-                            component="label"
+                        <>
+                          <Typography>Size*</Typography>
+                          <div
+                            style={{
+                              display: "flex",
+                            }}
                           >
-                            เลือกไฟล์
-                            <input
-                              hidden
-                              accept=".xlsx"
-                              multiple
-                              type="file"
-                              onChange={handleUploadxlxs}
-                              required
-                            />
-                          </Button>
-                          <div style={{ display: "flex" }}>
-                            {(() => {
-                              if (filezip == "") {
-                                return (
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      color: "red",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      textAlign: "center",
-                                      margin: "auto",
-                                      marginTop: "16px",
-                                    }}
-                                  >
-                                    <p>ยังไม่เลือกไฟล์</p>
-                                  </div>
-                                );
-                              } else {
-                                return (
-                                  <div
-                                    style={{
-                                      // display: "flex",
-                                      color: "green",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      textAlign: "center",
-                                      margin: "auto",
-                                      marginTop: "16px",
-                                    }}
-                                  >
-                                    <Button
-                                      onClick={handledownload}
-                                      variant="outlined"
-                                    >
-                                      {"ตรวจสอบไฟล์ : "}
-                                      {filezip.name}
-                                    </Button>
-                                    <Button
-                                      onClick={uploadfile}
-                                      variant="contained"
-                                    >
-                                      {"IMPORT"}
-                                    </Button>
-                                    <Typography style={{ marginTop: "16px" }}>
-                                      {" "}
-                                      {"เวลาแก้ไขไฟล์ล่าสุด : "}
-                                      {filezip.lastModifiedDate
-                                        .toString()
-                                        .substring(0, 25)}
-                                    </Typography>
-                                  </div>
-                                );
-                              }
-                            })()}
+                            <div>
+                              <Stack spacing={2}>
+                                {input.map((item, index) => {
+                                  return (
+                                    <div key={index}>
+                                      <TextField
+                                        id="outlined-basic"
+                                        label={`>Input size ตัวที่ ${item + 1}`}
+                                        variant="outlined"
+                                        type="number"
+                                        onChange={(e) => {
+                                          const temp = size;
+                                          temp[index] = Number(e.target.value);
+                                          setSize([...temp]);
+                                        }}
+                                        required
+                                      />
+                                    </div>
+                                  );
+                                })}
+                              </Stack>
+                              <div
+                                style={{
+                                  justifyContent: "center",
+                                  alignContent: "center",
+                                  display: "flex",
+                                }}
+                              >
+                                <IconButton onClick={OnbtnUpClick}>
+                                  <AddCircleIcon />
+                                </IconButton>
+                                <IconButton onClick={OnbtnDelClick}>
+                                  <RemoveCircleIcon />
+                                </IconButton>
+                              </div>
+                            </div>
+                            <div
+                              style={{
+                                justifyContent: "center",
+                                alignContent: "center",
+                                display: "flex",
+                                width: "50%",
+                              }}
+                            >
+                              <Button
+                                variant="contained"
+                                type="submit"
+                                style={{
+                                  height: "75px",
+                                  width: "70%",
+                                  margin: "auto",
+                                }}
+                                onClick={() => {
+                                  if (size.every((item) => item >= 10)) {
+                                    console.log(size);
+                                  } else {
+                                    alert("ขนาดต้องมากกว่า 10");
+                                  }
+                                }}
+                              >
+                                Process
+                              </Button>
+                            </div>
                           </div>
-                          <Button
-                            variant="contained"
-                            type="submit"
-                            sx={{ mt: "16px", width: "100%" }}
-                          >
-                            Process
-                          </Button>
-                        </Box>
+                        </>
                       )}
-                      name="departID"
+                      name="size"
                       control={control}
                       defaultValue=""
                     />
@@ -803,46 +768,10 @@ function SiteSurvay() {
           </Grid2>
         </div>
       </form>
-      {/* <Box
-        sx={{
-          margin: "auto",
-          mt: "20px",
-          backgroundColor: "white",
-          // width: "100%",
-          borderRadius: "7px",
-          border: 2,
-        }}
-      >
-        {" "}
-        <Canvas
-          camera={{ fov: 30, position: [50, 50, 50] }}
-          style={{ height: "550px" }}
-        >
-          <Suspense fallback={null}>
-            <ambientLight />
-            <directionalLight
-              position={[1, 1, 1]}
-              intensity={0.75}
-              lookAt={[20, -20, 20]}
-            />
-            <directionalLight
-              position={[-1, 0, -1]}
-              intensity={0.75}
-              lookAt={[20, -20, 20]}
-            />
-            <Model />
-            <OrbitControls
-              enablePan={true}
-              enableZoom={true}
-              enableRotate={true}
-            />
-          </Suspense>
-        </Canvas>
-      </Box> */}
       <div style={{ marginTop: "50px" }}>
         <Chart
           palette="Violet"
-          dataSource={dataplot.data_prx}
+          dataSource={dataplot.se_plot}
           title="Received Power(dBm)"
           style={{
             backgroundColor: "white",
@@ -850,7 +779,7 @@ function SiteSurvay() {
           }}
         >
           <CommonSeriesSettings
-            argumentField="distance"
+            argumentField="size"
             type="spline"
             color="#E600FD"
           />
@@ -862,22 +791,13 @@ function SiteSurvay() {
           ))}
           <Margin bottom={20} />
 
-          <ValueAxis
-            title="PRx"
-            //   linearThreshold={-3}
-            // type="logarithmic"
-            pane="top"
-          />
+          <ValueAxis title="SNE" pane="top" />
 
           <ArgumentAxis
             allowDecimals={false}
             axisDivisionFactor={60}
-            title="SNR"
-          >
-            {/* <Label>
-                <Format type="decimal" />
-              </Label> */}
-          </ArgumentAxis>
+            title="SIZE"
+          ></ArgumentAxis>
           <Legend
             verticalAlignment="bottom"
             horizontalAlignment="center"
@@ -887,7 +807,7 @@ function SiteSurvay() {
           <Legend visible={false} />
           <Tooltip enabled={true} />
         </Chart>
-        <Chart
+        {/* <Chart
           palette="Violet"
           dataSource={dataplot.data_spectral_efficiency}
           style={{
@@ -895,7 +815,6 @@ function SiteSurvay() {
             margin: "auto",
           }}
         >
-          {/* <Size height={580} width={800} /> */}
           <CommonSeriesSettings
             argumentField="SNR"
             type="line"
@@ -908,18 +827,15 @@ function SiteSurvay() {
             </Series>
           ))}
           <ValueAxis
-            title="SSE"
-            //   linearThreshold={-3}
-            // type="logarithmic"
+            title="SE"
             pane="top"
           />
 
           <Margin bottom={20} />
           <ArgumentAxis
-            title="SNR"
+            title="Size"
             valueMarginsEnabled={false}
             discreteAxisDivisionMode="crossLabels"
-            // inverted={true}
             tickInterval={2}
           >
             <Grid visible={true}></Grid>
@@ -931,20 +847,13 @@ function SiteSurvay() {
           />
           <Export enabled={true} />
           <Legend visible={false} />
-          <Title text="Spectral Efficiency">
-            {/* <Subtitle text="(Millions of Tons, Oil Equivalent)" /> */}
+          <Title text="RIS">
           </Title>
           <Tooltip enabled={true} />
-        </Chart>
-
-        {/* {console.log(zz)} */}
-
-        {/* <Stack>
-          <ColorMap />
-        </Stack> */}
+        </Chart> */}
       </div>
     </div>
   );
 }
 
-export default SiteSurvay;
+export default Tab2;

@@ -11,11 +11,11 @@ import {
 } from "@mui/icons-material";
 
 const Menuitems = [
-  {
-    title: "Dashboard",
-    icon: DashboardOutlined,
-    href: "/dashboards",
-  },
+  // {
+  //   title: "Dashboard",
+  //   icon: DashboardOutlined,
+  //   href: "/dashboards",
+  // },
   {
     title: "Plot",
     icon: AddToPhotosOutlined,
@@ -26,11 +26,11 @@ const Menuitems = [
     icon: AspectRatioOutlined,
     href: "/Sit-Survay",
   },
-  // {
-  //   title: "Checkbox",
-  //   icon: AssignmentTurnedInOutlined,
-  //   href: "/form-elements/checkbox",
-  // },
+  {
+    title: "Tab 2",
+    icon: AssignmentTurnedInOutlined,
+    href: "/Tab2",
+  },
   // {
   //   title: "Radio",
   //   icon: AlbumOutlined,

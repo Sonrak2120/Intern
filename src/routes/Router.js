@@ -10,18 +10,21 @@ import Test3 from "../test/Test3";
 import Dashboard1 from "../views/dashboards/Dashboard1";
 import Plot from "../views/page/Plot";
 import SiteSurvay from "../views/page/SiteSurvay";
+import Tab2 from "../views/page/Tab2";
 
 const ThemeRoutes = [
   {
     path: "/",
     element: <FullLayout />,
     children: [
-      { path: "/", element: <Navigate to="dashboards" /> },
-      { path: "dashboards", exact: true, element: <Dashboard1 /> },
-      { path: "plot", element: <Plot /> },
+      // { path: "/", element: <Navigate to="dashboards" /> },
+      // { path: "dashboards", exact: true, element: <Dashboard1 /> },
+      { path: "/", element: <Navigate to="Plot" /> },
+      { path: "Plot", exact: true, element: <Plot /> },
+      // { path: "plot", element: <Plot /> },
       { path: "/Sit-Survay", element: <SiteSurvay /> },
       { path: "/test", element: <Test3 /> },
-      // { path: "/form-elements/autocomplete", element: <ExAutoComplete /> },
+      { path: "/Tab2", element: <Tab2 /> },
       // { path: "/form-elements/button", element: <ExButton /> },
       // { path: "/form-elements/checkbox", element: <ExCheckbox /> },
       // { path: "/form-elements/radio", element: <ExRadio /> },
