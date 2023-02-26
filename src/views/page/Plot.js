@@ -215,7 +215,7 @@ function Plot() {
               />
               <Export enabled={true} />
               <Legend visible={false} />
-              <Title text="Catrsian Plot">
+              <Title text="Cartesian Plot">
                 {/* <Subtitle text="(Millions of Tons, Oil Equivalent)" /> */}
               </Title>
               <Tooltip enabled={true} />

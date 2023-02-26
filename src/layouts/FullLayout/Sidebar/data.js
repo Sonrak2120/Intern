@@ -22,12 +22,12 @@ const Menuitems = [
     href: "/Plot",
   },
   {
-    title: "Site Survay",
+    title: "Site Survey",
     icon: AspectRatioOutlined,
     href: "/Sit-Survay",
   },
   {
-    title: "Tab 2",
+    title: "Compare RIS size",
     icon: AssignmentTurnedInOutlined,
     href: "/Tab2",
   },
