@@ -19,6 +19,7 @@ import {
   Avatar,
   Divider,
   ListItemIcon,
+  Typography,
 } from "@mui/material";
 
 import userimg from "../../../assets/images/users/user.jpg";
@@ -266,6 +267,18 @@ const Header = (props) => {
             Logout
           </MenuItem>
         </Menu> */}
+        <Typography
+          variant="h1"
+          sx={{
+            color: "white",
+            alignItems: "center",
+            justifyContent: "center",
+            display: "flex",
+            margin: "auto",
+          }}
+        >
+          กลุ่มวิจัยอุปกรณ์สเปกโทรสโกปีและเซนเซอร์
+        </Typography>
       </Toolbar>
     </AppBar>
   );

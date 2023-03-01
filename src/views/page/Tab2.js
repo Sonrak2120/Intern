@@ -772,7 +772,7 @@ function Tab2() {
         <Chart
           palette="Violet"
           dataSource={dataplot.se_plot}
-          title="Received Power(dBm)"
+          title="RIS"
           style={{
             backgroundColor: "white",
             margin: "auto",

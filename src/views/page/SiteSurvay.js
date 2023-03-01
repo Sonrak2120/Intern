@@ -612,7 +612,7 @@ function SiteSurvay() {
                       render={({ field: { onChange } }) => (
                         <TextFieldCustom
                           id="Np_IRS_set"
-                          label="NNumber of Successive time slot"
+                          label="Number of Successive time slot"
                           onChange={(e) => setNp_IRS_set(e.target.value)}
                           required
                         />
