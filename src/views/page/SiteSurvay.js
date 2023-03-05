@@ -4,10 +4,12 @@ import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import TextField from "@mui/material/TextField";
-import { styled, Button } from "@mui/material";
+import { styled, Button, Select, MenuItem } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import ColorMap from "../model/ColorMap";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
 
 import "../../App.css";
 import { Box, Stack, Typography } from "@mui/material";
@@ -52,6 +54,9 @@ const TextFieldCustom = styled(TextField)(({ them }) => ({
     display: "flex",
   },
 }));
+
+const RIS = ["D", "U", "C"];
+const DSC = ["R", "U", "B"];
 
 export function Model(props) {
   const { nodes, materials } = useGLTF("/room_uv.gltf");
@@ -195,7 +200,7 @@ function SiteSurvay() {
       n_elm: parseFloat(n_elm),
       Bw: parseFloat(Bw),
       N_UE: parseFloat(N_UE),
-      ue_an: parseFloat(ue_an),
+      ue_an: 8,
       data_ris: data_ris,
     };
 
@@ -330,6 +335,45 @@ function SiteSurvay() {
                     <Controller
                       render={({ field: { onChange } }) => (
                         <TextFieldCustom
+                          id="x_BS"
+                          label="x_BS"
+                          onChange={(e) => setx_BS(e.target.value)}
+                          required
+                        />
+                      )}
+                      name="x_BS"
+                      control={control}
+                      defaultValue=""
+                    />
+                    <Controller
+                      render={({ field: { onChange } }) => (
+                        <TextFieldCustom
+                          id="y_BS"
+                          label="y_BS"
+                          onChange={(e) => sety_BS(e.target.value)}
+                          required
+                        />
+                      )}
+                      name="y_BS"
+                      control={control}
+                      defaultValue=""
+                    />
+                    <Controller
+                      render={({ field: { onChange } }) => (
+                        <TextFieldCustom
+                          id="z_BS"
+                          label="z_BS"
+                          onChange={(e) => setz_BS(e.target.value)}
+                          required
+                        />
+                      )}
+                      name="z_BS"
+                      control={control}
+                      defaultValue=""
+                    />
+                    <Controller
+                      render={({ field: { onChange } }) => (
+                        <TextFieldCustom
                           id="bs_an"
                           label="Number of antena"
                           onChange={(e) => setbs_an(e.target.value)}
@@ -382,8 +426,10 @@ function SiteSurvay() {
                     <Controller
                       render={({ field: { onChange } }) => (
                         <TextFieldCustom
+                          disabled
                           id="ue_an"
                           label="Number of antena"
+                          defaultValue="8"
                           onChange={(e) => setue_an(e.target.value)}
                           required
                         />
@@ -426,85 +472,7 @@ function SiteSurvay() {
                     Parameter Channel
                   </Typography>
                   <Stack spacing={1.5}>
-                    <Controller
-                      render={({ field: { onChange } }) => (
-                        <TextFieldCustom
-                          id="x_BS"
-                          label="x_BS"
-                          onChange={(e) => setx_BS(e.target.value)}
-                          required
-                        />
-                      )}
-                      name="x_BS"
-                      control={control}
-                      defaultValue=""
-                    />
-                    <Controller
-                      render={({ field: { onChange } }) => (
-                        <TextFieldCustom
-                          id="y_BS"
-                          label="y_BS"
-                          onChange={(e) => sety_BS(e.target.value)}
-                          required
-                        />
-                      )}
-                      name="y_BS"
-                      control={control}
-                      defaultValue=""
-                    />
-                    <Controller
-                      render={({ field: { onChange } }) => (
-                        <TextFieldCustom
-                          id="z_BS"
-                          label="z_BS"
-                          onChange={(e) => setz_BS(e.target.value)}
-                          required
-                        />
-                      )}
-                      name="z_BS"
-                      control={control}
-                      defaultValue=""
-                    />
-                    <Controller
-                      render={({ field: { onChange } }) => (
-                        <TextFieldCustom
-                          id="x_IRS"
-                          label="x_IRS"
-                          onChange={(e) => setx_IRS(e.target.value)}
-                          required
-                        />
-                      )}
-                      name="x_IRS"
-                      control={control}
-                      defaultValue=""
-                    />
-                    <Controller
-                      render={({ field: { onChange } }) => (
-                        <TextFieldCustom
-                          id="y_IRS"
-                          label="y_IRS"
-                          onChange={(e) => sety_IRS(e.target.value)}
-                          required
-                        />
-                      )}
-                      name="y_IRS"
-                      control={control}
-                      defaultValue=""
-                    />
-                    <Controller
-                      render={({ field: { onChange } }) => (
-                        <TextFieldCustom
-                          id="z_IRS"
-                          label="z_IRS"
-                          onChange={(e) => setz_IRS(e.target.value)}
-                          required
-                        />
-                      )}
-                      name="z_IRS"
-                      control={control}
-                      defaultValue=""
-                    />
-                    <Controller
+                    {/* <Controller
                       render={({ field: { onChange } }) => (
                         <TextFieldCustom
                           id="DSC_type"
@@ -512,6 +480,32 @@ function SiteSurvay() {
                           onChange={(e) => setDSC_type(e.target.value)}
                           required
                         />
+                      )}
+                      name="DSC_type"
+                      control={control}
+                      defaultValue=""
+                    /> */}
+                    <Controller
+                      render={({ field: { onChange } }) => (
+                        <Box>
+                          <FormControl fullWidth>
+                            <InputLabel>Dedicated subcarriers type*</InputLabel>
+                            <Select
+                              value={DSC_type}
+                              label="Dedicated subcarriers type*"
+                              onChange={(e) => {
+                                setDSC_type(e.target.value);
+                              }}
+                              required
+                            >
+                              {DSC.map((name) => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </Box>
                       )}
                       name="DSC_type"
                       control={control}
@@ -664,11 +658,77 @@ function SiteSurvay() {
                     <Controller
                       render={({ field: { onChange } }) => (
                         <TextFieldCustom
+                          id="x_IRS"
+                          label="x_IRS"
+                          onChange={(e) => setx_IRS(e.target.value)}
+                          required
+                        />
+                      )}
+                      name="x_IRS"
+                      control={control}
+                      defaultValue=""
+                    />
+                    <Controller
+                      render={({ field: { onChange } }) => (
+                        <TextFieldCustom
+                          id="y_IRS"
+                          label="y_IRS"
+                          onChange={(e) => sety_IRS(e.target.value)}
+                          required
+                        />
+                      )}
+                      name="y_IRS"
+                      control={control}
+                      defaultValue=""
+                    />
+                    <Controller
+                      render={({ field: { onChange } }) => (
+                        <TextFieldCustom
+                          id="z_IRS"
+                          label="z_IRS"
+                          onChange={(e) => setz_IRS(e.target.value)}
+                          required
+                        />
+                      )}
+                      name="z_IRS"
+                      control={control}
+                      defaultValue=""
+                    />
+                    {/* <Controller
+                      render={({ field: { onChange } }) => (
+                        <TextFieldCustom
                           id="IRS_type"
                           label="Reconfigurable smart surface type"
                           onChange={(e) => setIRS_type(e.target.value)}
                           required
                         />
+                      )}
+                      name="IRS_type"
+                      control={control}
+                      defaultValue=""
+                    /> */}
+
+                    <Controller
+                      render={({ field: { onChange } }) => (
+                        <Box>
+                          <FormControl fullWidth>
+                            <InputLabel>RIS*</InputLabel>
+                            <Select
+                              value={IRS_type}
+                              label="RIS*"
+                              onChange={(e) => {
+                                setIRS_type(e.target.value);
+                              }}
+                              required
+                            >
+                              {RIS.map((name) => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </Box>
                       )}
                       name="IRS_type"
                       control={control}
@@ -800,8 +860,11 @@ function SiteSurvay() {
 
       <Box
         sx={{
-          margin: "auto",
-          mt: "20px",
+          // margin: "auto",
+          mt: "50px",
+          ml: "50px",
+          mr: "50px",
+          mb: "50px",
           backgroundColor: "white",
           // width: "100%",
           borderRadius: "7px",
@@ -810,7 +873,7 @@ function SiteSurvay() {
       >
         {" "}
         <Canvas
-          camera={{ fov: 30, position: [50, 50, 50] }}
+          camera={{ fov: 60, position: [0, 180, 50] }}
           style={{ height: "550px" }}
         >
           <Suspense fallback={null}>
