@@ -4,12 +4,14 @@ import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import TextField from "@mui/material/TextField";
-import { styled, Button } from "@mui/material";
+import { styled, Button, Select, MenuItem } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import IconButton from "@mui/material/IconButton";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
 
 import "../../App.css";
 import { Box, Stack, Typography } from "@mui/material";
@@ -54,6 +56,9 @@ const TextFieldCustom = styled(TextField)(({ them }) => ({
     display: "flex",
   },
 }));
+
+const RIS = ["D", "U", "C"];
+const DSC = ["R", "U", "B"];
 
 function Tab2() {
   const [open, setOpen] = React.useState(false);
@@ -189,7 +194,7 @@ function Tab2() {
       size: size,
       Bw: parseFloat(Bw),
       N_UE: parseFloat(N_UE),
-      ue_an: parseFloat(ue_an),
+      ue_an: 8,
       // data_ris: data_ris,
     };
 
@@ -324,8 +329,47 @@ function Tab2() {
                     <Controller
                       render={({ field: { onChange } }) => (
                         <TextFieldCustom
+                          id="x_BS"
+                          label="x_BS"
+                          onChange={(e) => setx_BS(e.target.value)}
+                          required
+                        />
+                      )}
+                      name="x_BS"
+                      control={control}
+                      defaultValue=""
+                    />
+                    <Controller
+                      render={({ field: { onChange } }) => (
+                        <TextFieldCustom
+                          id="y_BS"
+                          label="y_BS"
+                          onChange={(e) => sety_BS(e.target.value)}
+                          required
+                        />
+                      )}
+                      name="y_BS"
+                      control={control}
+                      defaultValue=""
+                    />
+                    <Controller
+                      render={({ field: { onChange } }) => (
+                        <TextFieldCustom
+                          id="z_BS"
+                          label="z_BS"
+                          onChange={(e) => setz_BS(e.target.value)}
+                          required
+                        />
+                      )}
+                      name="z_BS"
+                      control={control}
+                      defaultValue=""
+                    />
+                    <Controller
+                      render={({ field: { onChange } }) => (
+                        <TextFieldCustom
                           id="bs_an"
-                          label="Number of antena"
+                          label="Number of antenna"
                           onChange={(e) => setbs_an(e.target.value)}
                           required
                         />
@@ -376,8 +420,10 @@ function Tab2() {
                     <Controller
                       render={({ field: { onChange } }) => (
                         <TextFieldCustom
+                          disabled
                           id="ue_an"
-                          label="Number of antena"
+                          label="Number of antenna"
+                          defaultValue="8"
                           onChange={(e) => setue_an(e.target.value)}
                           required
                         />
@@ -422,90 +468,25 @@ function Tab2() {
                   <Stack spacing={1.5}>
                     <Controller
                       render={({ field: { onChange } }) => (
-                        <TextFieldCustom
-                          id="x_BS"
-                          label="x_BS"
-                          onChange={(e) => setx_BS(e.target.value)}
-                          required
-                        />
-                      )}
-                      name="x_BS"
-                      control={control}
-                      defaultValue=""
-                    />
-                    <Controller
-                      render={({ field: { onChange } }) => (
-                        <TextFieldCustom
-                          id="y_BS"
-                          label="y_BS"
-                          onChange={(e) => sety_BS(e.target.value)}
-                          required
-                        />
-                      )}
-                      name="y_BS"
-                      control={control}
-                      defaultValue=""
-                    />
-                    <Controller
-                      render={({ field: { onChange } }) => (
-                        <TextFieldCustom
-                          id="z_BS"
-                          label="z_BS"
-                          onChange={(e) => setz_BS(e.target.value)}
-                          required
-                        />
-                      )}
-                      name="z_BS"
-                      control={control}
-                      defaultValue=""
-                    />
-                    <Controller
-                      render={({ field: { onChange } }) => (
-                        <TextFieldCustom
-                          id="x_IRS"
-                          label="x_IRS"
-                          onChange={(e) => setx_IRS(e.target.value)}
-                          required
-                        />
-                      )}
-                      name="x_IRS"
-                      control={control}
-                      defaultValue=""
-                    />
-                    <Controller
-                      render={({ field: { onChange } }) => (
-                        <TextFieldCustom
-                          id="y_IRS"
-                          label="y_IRS"
-                          onChange={(e) => sety_IRS(e.target.value)}
-                          required
-                        />
-                      )}
-                      name="y_IRS"
-                      control={control}
-                      defaultValue=""
-                    />
-                    <Controller
-                      render={({ field: { onChange } }) => (
-                        <TextFieldCustom
-                          id="z_IRS"
-                          label="z_IRS"
-                          onChange={(e) => setz_IRS(e.target.value)}
-                          required
-                        />
-                      )}
-                      name="z_IRS"
-                      control={control}
-                      defaultValue=""
-                    />
-                    <Controller
-                      render={({ field: { onChange } }) => (
-                        <TextFieldCustom
-                          id="DSC_type"
-                          label="Dedicated subcarriers type"
-                          onChange={(e) => setDSC_type(e.target.value)}
-                          required
-                        />
+                        <Box>
+                          <FormControl fullWidth>
+                            <InputLabel>Dedicated subcarriers type*</InputLabel>
+                            <Select
+                              value={DSC_type}
+                              label="Dedicated subcarriers type*"
+                              onChange={(e) => {
+                                setDSC_type(e.target.value);
+                              }}
+                              required
+                            >
+                              {DSC.map((name) => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </Box>
                       )}
                       name="DSC_type"
                       control={control}
@@ -516,7 +497,7 @@ function Tab2() {
                       render={({ field: { onChange } }) => (
                         <TextFieldCustom
                           id="N_cp"
-                          label="Sub-Carrier"
+                          label="Sub-Carrier Cyclic prefix"
                           onChange={(e) => setN_cp(e.target.value)}
                           required
                         />
@@ -658,11 +639,65 @@ function Tab2() {
                     <Controller
                       render={({ field: { onChange } }) => (
                         <TextFieldCustom
-                          id="IRS_type"
-                          label="Reconfigurable smart surface type"
-                          onChange={(e) => setIRS_type(e.target.value)}
+                          id="x_IRS"
+                          label="x_IRS"
+                          onChange={(e) => setx_IRS(e.target.value)}
                           required
                         />
+                      )}
+                      name="x_IRS"
+                      control={control}
+                      defaultValue=""
+                    />
+                    <Controller
+                      render={({ field: { onChange } }) => (
+                        <TextFieldCustom
+                          id="y_IRS"
+                          label="y_IRS"
+                          onChange={(e) => sety_IRS(e.target.value)}
+                          required
+                        />
+                      )}
+                      name="y_IRS"
+                      control={control}
+                      defaultValue=""
+                    />
+
+                    <Controller
+                      render={({ field: { onChange } }) => (
+                        <TextFieldCustom
+                          id="z_IRS"
+                          label="z_IRS"
+                          onChange={(e) => setz_IRS(e.target.value)}
+                          required
+                        />
+                      )}
+                      name="z_IRS"
+                      control={control}
+                      defaultValue=""
+                    />
+
+                    <Controller
+                      render={({ field: { onChange } }) => (
+                        <Box>
+                          <FormControl fullWidth>
+                            <InputLabel>RIS*</InputLabel>
+                            <Select
+                              value={IRS_type}
+                              label="RIS*"
+                              onChange={(e) => {
+                                setIRS_type(e.target.value);
+                              }}
+                              required
+                            >
+                              {RIS.map((name) => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </Box>
                       )}
                       name="IRS_type"
                       control={control}
@@ -791,7 +826,7 @@ function Tab2() {
           ))}
           <Margin bottom={20} />
 
-          <ValueAxis title="SNE" pane="top" />
+          <ValueAxis title="Spectral Efficiency" pane="top" />
 
           <ArgumentAxis
             allowDecimals={false}

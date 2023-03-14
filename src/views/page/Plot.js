@@ -4,14 +4,17 @@ import Box from "@mui/material/Box";
 import axios from "axios";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
 
-import Button from "@mui/material/Button";
+import { styled, Button, Select, MenuItem } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import service from "./data";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
 
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -51,11 +54,14 @@ export const types = [{ val: "dBm", name: "dBm" }];
 function Plot() {
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
+  const [open3, setOpen3] = React.useState(false);
+  const [open4, setOpen4] = React.useState(false);
   const [openalert, setOpenalert] = React.useState(false);
   const [dataplot, setData] = React.useState("");
 
   const handleClick2 = () => {
     setOpen2(true);
+    setOpen3(true);
     setOpenalert(true);
   };
 
@@ -65,6 +71,7 @@ function Plot() {
     }
 
     setOpen2(false);
+    setOpen3(false);
     setOpenalert(false);
   };
 
@@ -127,10 +134,16 @@ function Plot() {
     if (reqOptions.data.message == "File uploaded successfully") {
       setOpen2(true);
       // window.location.reload("Refresh");
+    } else if (reqOptions.data.message == "invalid degree position") {
+      setOpen3(true);
+      // window.location.reload("Refresh");
+    } else if (reqOptions.data.message == "File extension not allowed") {
+      setOpen4(true);
+      // window.location.reload("Refresh");
     } else {
       setOpenalert(true);
       // console.log("ผิดพลาด", reqOptions.data.message);
-      window.location.reload("Refresh");
+      // window.location.reload("Refresh");
     }
   };
   // console.log(open2);
@@ -146,6 +159,8 @@ function Plot() {
   const [split, setsplit] = useState("");
   const [degree, setdegree] = useState("");
   const [freq, setfreq] = useState("");
+  const [degree_type, setdegree_type] = React.useState([]);
+  const degreeType = ["หน้าชื่อไฟล์", "หลังชื่อไฟล์"];
 
   const onSubmit = (data) => {
     handleSubmits(data);
@@ -268,15 +283,45 @@ function Plot() {
                     control={control}
                     defaultValue=""
                   />
-                  <Controller
+                  {/* <Controller
                     render={({ field: { onChange } }) => (
                       <TextField
                         sx={{ width: "450px" }}
-                        id="degree"
+                        id="cc"
                         label="ตำแหน่ง(องศา)"
                         onChange={(e) => setdegree(e.target.value)}
                         required
                       />
+                    )}
+                    name="degree"
+                    control={control}
+                    defaultValue=""
+                  /> */}
+                  <Controller
+                    render={({ field: { onChange } }) => (
+                      <Box>
+                        <FormControl fullWidth>
+                          <InputLabel>ตำแหน่ง(องศา)*</InputLabel>
+                          <Select
+                            id="cc"
+                            label="ตำแหน่ง(องศา)*"
+                            // onChange={(e) => setdegree(e.target.value)}
+                            onChange={(e) => {
+                              const selectedValue = e.target.value;
+                              const apiValue =
+                                selectedValue === "หน้าชื่อไฟล์" ? "0" : "1";
+                              setdegree(apiValue);
+                            }}
+                            required
+                          >
+                            {degreeType.map((name) => (
+                              <MenuItem key={name} value={name}>
+                                {name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Box>
                     )}
                     name="degree"
                     control={control}
@@ -377,7 +422,7 @@ function Plot() {
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>ยกเลิก</Button>
-              <Button type="submit">เพิ่ม</Button>
+              <Button type="submit">Plot</Button>
             </DialogActions>
           </form>
         </Dialog>
@@ -403,6 +448,28 @@ function Plot() {
         >
           <Alert onClose={handleClose2} severity="error" sx={{ width: "100%" }}>
             ผิดพลาด
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={open3}
+          autoHideDuration={5000}
+          onClose={handleClose2}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert onClose={handleClose2} severity="error" sx={{ width: "100%" }}>
+            <AlertTitle>Error</AlertTitle>พบข้อผิดพลาด —{" "}
+            <strong>กรุณาตรวจสอบตำแหน่งขององศา</strong>
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={open4}
+          autoHideDuration={5000}
+          onClose={handleClose2}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert onClose={handleClose2} severity="error" sx={{ width: "100%" }}>
+            <AlertTitle>Error</AlertTitle>พบข้อผิดพลาด —{" "}
+            <strong>ไม่อนุญาตให้ใช้นามสกุลไฟล์</strong>
           </Alert>
         </Snackbar>
       </div>

@@ -10,6 +10,9 @@ import axios from "axios";
 import ColorMap from "../model/ColorMap";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
 
 import "../../App.css";
 import { Box, Stack, Typography } from "@mui/material";
@@ -43,6 +46,7 @@ const energySources = service.getEnergySources();
 // const types = ["line", "stackedline", "fullstackedline"];
 export const types = [{ val: "SSE", name: "SSE" }];
 export const types2 = [{ val: "PRx", name: "PRx" }];
+export const types3 = [{ val: "BER", name: "BER" }];
 
 const TextFieldCustom = styled(TextField)(({ them }) => ({
   "& .css-1m3yc3-MuiInputBase-root-MuiOutlinedInput-root": {
@@ -85,7 +89,18 @@ export function Model(props) {
 }
 
 function SiteSurvay() {
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
   const [open, setOpen] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
+  const [open3, setOpen3] = React.useState(false);
+  const [open4, setOpen4] = React.useState(false);
+  const [open5, setOpen5] = React.useState(false);
+  const [open8, setOpen8] = React.useState(false);
+  const [open6, setOpen6] = React.useState(false);
+  const [open7, setOpen7] = React.useState(false);
+  const [openalert, setOpenalert] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
   const [filezip, setfilxls] = useState("");
@@ -113,6 +128,20 @@ function SiteSurvay() {
   const handleClose = () => {
     setOpen(false);
   };
+  const handleClose2 = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen2(false);
+    setOpen3(false);
+    setOpen4(false);
+    setOpen5(false);
+    setOpen6(false);
+    setOpen7(false);
+    setOpen8(false);
+    setOpenalert(false);
+  };
   const uploadfile = async (event) => {
     setOpen(false);
     setLoading(true);
@@ -136,6 +165,15 @@ function SiteSurvay() {
     // console.log(response.data.data_ris);
     setdata_ris(response.data.data_ris);
     setLoading(false);
+    if (reqOptions.data.message == "success") {
+      setOpen2(true);
+    } else if (reqOptions.data.message == "File is not square matrix") {
+      setOpen3(true);
+    } else if (reqOptions.data.message == "Please upload excel file") {
+      setOpen4(true);
+    } else {
+      setOpenalert(true);
+    }
   };
 
   const {
@@ -218,6 +256,23 @@ function SiteSurvay() {
     console.log(response.data);
     setLoading(false);
     setData(response.data);
+    if (reqOptions.data.message == "success") {
+      setOpen6(true);
+      // window.location.reload("Refresh");
+    } else if (
+      reqOptions.data.message == "Please check your location parameter"
+    ) {
+      setOpen7(true);
+    } else if (
+      reqOptions.data.message ==
+      "Please check your RIS file and number of element parameter"
+    ) {
+      setOpen8(true);
+    } else if (reqOptions.data.message == "Please upload RIS data file") {
+      setOpen5(true);
+    } else {
+      setOpenalert(true);
+    }
   };
   console.log("dataplot==", dataplot);
 
@@ -375,7 +430,7 @@ function SiteSurvay() {
                       render={({ field: { onChange } }) => (
                         <TextFieldCustom
                           id="bs_an"
-                          label="Number of antena"
+                          label="Number of antenna"
                           onChange={(e) => setbs_an(e.target.value)}
                           required
                         />
@@ -428,7 +483,7 @@ function SiteSurvay() {
                         <TextFieldCustom
                           disabled
                           id="ue_an"
-                          label="Number of antena"
+                          label="Number of antenna"
                           defaultValue="8"
                           onChange={(e) => setue_an(e.target.value)}
                           required
@@ -515,7 +570,7 @@ function SiteSurvay() {
                       render={({ field: { onChange } }) => (
                         <TextFieldCustom
                           id="N_cp"
-                          label="Sub-Carrier"
+                          label="Sub-Carrier Cyclic prefix"
                           onChange={(e) => setN_cp(e.target.value)}
                           required
                         />
@@ -901,7 +956,7 @@ function SiteSurvay() {
       <Chart
         palette="Violet"
         dataSource={dataplot.data_prx}
-        title="Received Power(dBm)"
+        title="Received Power"
         style={{
           backgroundColor: "white",
           margin: "auto",
@@ -921,13 +976,17 @@ function SiteSurvay() {
         <Margin bottom={20} />
 
         <ValueAxis
-          title="PRx"
+          title="Received Power(dBm)"
           //   linearThreshold={-3}
           // type="logarithmic"
           pane="top"
         />
 
-        <ArgumentAxis allowDecimals={false} axisDivisionFactor={60} title="SNR">
+        <ArgumentAxis
+          allowDecimals={false}
+          axisDivisionFactor={60}
+          title="Distance(m)"
+        >
           {/* <Label>
                 <Format type="decimal" />
               </Label> */}
@@ -958,7 +1017,7 @@ function SiteSurvay() {
           </Series>
         ))}
         <ValueAxis
-          title="SSE"
+          title="Spectral Efficiency"
           //   linearThreshold={-3}
           // type="logarithmic"
           pane="top"
@@ -966,7 +1025,7 @@ function SiteSurvay() {
 
         <Margin bottom={20} />
         <ArgumentAxis
-          title="SNR"
+          title="SNR(dB)"
           valueMarginsEnabled={false}
           discreteAxisDivisionMode="crossLabels"
           // inverted={true}
@@ -986,12 +1045,145 @@ function SiteSurvay() {
         </Title>
         <Tooltip enabled={true} />
       </Chart>
+      <Chart
+        palette="Violet"
+        dataSource={dataplot.data_ber}
+        style={{
+          backgroundColor: "white",
+          margin: "auto",
+        }}
+      >
+        {/* <Size height={580} width={800} /> */}
+        <CommonSeriesSettings argumentField="SNR" type="line" color="#16DA34" />
+        {types3.map((item) => (
+          <Series key={item.val} valueField={item.val} name={item.name}>
+            {" "}
+            <Point symbol="circle" size={6} />
+          </Series>
+        ))}
+        <ValueAxis
+          title="Bit Error Rate"
+          //   linearThreshold={-3}
+          // type="logarithmic"
+          pane="top"
+        />
+
+        <Margin bottom={20} />
+        <ArgumentAxis
+          title="SNR(dB)"
+          valueMarginsEnabled={false}
+          discreteAxisDivisionMode="crossLabels"
+          // inverted={true}
+          tickInterval={2}
+        >
+          <Grid visible={true}></Grid>
+        </ArgumentAxis>
+        <Legend
+          verticalAlignment="bottom"
+          horizontalAlignment="center"
+          itemTextPosition="bottom"
+        />
+        <Export enabled={true} />
+        <Legend visible={false} />
+        <Title text="Bit Error Rate">
+          {/* <Subtitle text="(Millions of Tons, Oil Equivalent)" /> */}
+        </Title>
+        <Tooltip enabled={true} />
+      </Chart>
 
       {/* {console.log(zz)} */}
 
       {/* <Stack>
           <ColorMap />
         </Stack> */}
+      <Snackbar
+        open={open2}
+        autoHideDuration={5000}
+        onClose={handleClose2}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose2} severity="success" sx={{ width: "100%" }}>
+          <AlertTitle>success</AlertTitle>
+          อัปโหลดไฟล์เสร็จสมบูรณ์
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={openalert}
+        // autoHideDuration={5000}
+        onClose={handleClose2}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose2} severity="error" sx={{ width: "100%" }}>
+          <AlertTitle>Error</AlertTitle>
+          ผิดพลาด
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={open3}
+        autoHideDuration={5000}
+        onClose={handleClose2}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose2} severity="error" sx={{ width: "100%" }}>
+          <AlertTitle>Error</AlertTitle>พบข้อผิดพลาด —{" "}
+          <strong>รูปแบบไฟล์ไช่เมทริกซ์</strong>
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={open4}
+        autoHideDuration={5000}
+        onClose={handleClose2}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose2} severity="error" sx={{ width: "100%" }}>
+          <AlertTitle>Error</AlertTitle>พบข้อผิดพลาด —{" "}
+          <strong>กรุณาอัพโหลดไฟล์ excel</strong>
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={open5}
+        autoHideDuration={5000}
+        onClose={handleClose2}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose2} severity="error" sx={{ width: "100%" }}>
+          <AlertTitle>Error</AlertTitle>พบข้อผิดพลาด —{" "}
+          <strong>โปรดอัปโหลดไฟล์ข้อมูล RIS</strong>
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={open6}
+        autoHideDuration={5000}
+        onClose={handleClose2}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose2} severity="success" sx={{ width: "100%" }}>
+          <AlertTitle>success</AlertTitle>
+          เสร็จสมบูรณ์
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={open7}
+        autoHideDuration={5000}
+        onClose={handleClose2}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose2} severity="error" sx={{ width: "100%" }}>
+          <AlertTitle>Error</AlertTitle>พบข้อผิดพลาด —{" "}
+          <strong>โปรดตรวจสอบตำแหน่งของพารามิเตอร์</strong>
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={open8}
+        autoHideDuration={5000}
+        onClose={handleClose2}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose2} severity="error" sx={{ width: "100%" }}>
+          <AlertTitle>Error</AlertTitle>พบข้อผิดพลาด —{" "}
+          <strong>โปรดตรวจสอบไฟล์ RIS และจำนวนองค์ประกอบพารามิเตอร์</strong>
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

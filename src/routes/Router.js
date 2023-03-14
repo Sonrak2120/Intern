@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 
 /****Layouts*****/
 import FullLayout from "../layouts/FullLayout/FullLayout";
-import Test3 from "../test/Test3";
+import Test3 from "../views/page/Test3";
 /****End Layouts*****/
 
 /*****Pages******/
