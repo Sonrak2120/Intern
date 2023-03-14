@@ -68,13 +68,14 @@ function SiteSurvay() {
   const [change_model, setchange_model] = useState(true);
   const [nodes, setnodes] = useState({});
   const [materials, setmaterials] = useState({});
+  useEffect(() => {
+    const { nodes, materials} = useGLTF("/room_uv.gltf");
+    setnodes(nodes);
+    setmaterials(materials);
+    
+  }, [change_model]);
 function Model(props) {
-    useEffect(() => {
-      const { nodes, materials} = useGLTF("/room_uv.gltf");
-      setnodes(nodes);
-      setmaterials(materials);
-      
-    }, [change_model]);
+   
     return (
       <group {...props} dispose={null}>
         <mesh
