@@ -67,11 +67,10 @@ const DSC = ["R", "U", "B"];
 function SiteSurvay() {
   const [change_model, setchange_model] = useState(true);
   const [nodes, setnodes] = useState({});
-  const [materials, setmaterials] = useState({});
+  const [materials_nodes, setmaterials_nodes] = useState();
   useEffect(() => {
-    const { nodes, materials} = useGLTF("/room_uv.gltf");
-    setnodes(nodes);
-    setmaterials(materials);
+    setmaterials_nodes(useGLTF("/room_uv.gltf")) ;
+    console.log("materials_nodes",materials_nodes)
     
   }, [change_model]);
 function Model(props) {
@@ -79,20 +78,20 @@ function Model(props) {
     return (
       <group {...props} dispose={null}>
         <mesh
-          geometry={props.nodes.Cylinder.geometry}
-          material={props.materials["Material.003"]}
+          geometry={materials_nodes.nodes.Cylinder.geometry}
+          material={materials_nodes.materials["Material.003"]}
           position={[-81, 10.58, 80]}
           scale={[0.4, 10.57, 0.4]}
         />
         <mesh
-          geometry={nodes.Plane002.geometry}
-          material={nodes.Plane002.material}
+          geometry={materials_nodes.nodes.Plane002.geometry}
+          material={materials_nodes.nodes.Plane002.material}
           position={[-81, 0, 0]}
           scale={[20, 1, 81]}
         />
         <mesh
-          geometry={nodes.Plane003.geometry}
-          material={materials.Material}
+          geometry={materials_nodes.nodes.Plane003.geometry}
+          material={materials_nodes.materials.Material}
           position={[20, 0, 0]}
           scale={[81, 1, 81]}
         />
@@ -958,7 +957,7 @@ function Model(props) {
                 intensity={0.75}
                 lookAt={[20, -20, 20]}
               />
-              <Model nodes = {nodes} material = {materials}/>
+              <Model />
               <OrbitControls
                 enablePan={true}
                 enableZoom={true}
