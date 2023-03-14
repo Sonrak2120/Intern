@@ -913,45 +913,48 @@ function SiteSurvay() {
         </div>
       </form>
 
-      <Box
-        sx={{
-          // margin: "auto",
-          mt: "50px",
-          ml: "50px",
-          mr: "50px",
-          mb: "50px",
-          backgroundColor: "white",
-          // width: "100%",
-          borderRadius: "7px",
-          border: 2,
-        }}
-      >
-        {" "}
-        <Canvas
-          camera={{ fov: 60, position: [0, 180, 50] }}
-          style={{ height: "550px" }}
+      <div style={{ marginTop: "50px", backgroundColor: "white" }}>
+        <Typography>กราฟ</Typography>
+        <Box
+          sx={{
+            // margin: "auto",
+            mt: "50px",
+            ml: "50px",
+            mr: "50px",
+            mb: "50px",
+            backgroundColor: "white",
+            // width: "100%",
+            borderRadius: "7px",
+            border: 2,
+          }}
         >
-          <Suspense fallback={null}>
-            <ambientLight />
-            <directionalLight
-              position={[1, 1, 1]}
-              intensity={0.75}
-              lookAt={[20, -20, 20]}
-            />
-            <directionalLight
-              position={[-1, 0, -1]}
-              intensity={0.75}
-              lookAt={[20, -20, 20]}
-            />
-            <Model />
-            <OrbitControls
-              enablePan={true}
-              enableZoom={true}
-              enableRotate={true}
-            />
-          </Suspense>
-        </Canvas>
-      </Box>
+          {" "}
+          <Canvas
+            camera={{ fov: 60, position: [0, 180, 50] }}
+            style={{ height: "550px" }}
+          >
+            <Suspense fallback={null}>
+              <ambientLight />
+              <directionalLight
+                position={[1, 1, 1]}
+                intensity={0.75}
+                lookAt={[20, -20, 20]}
+              />
+              <directionalLight
+                position={[-1, 0, -1]}
+                intensity={0.75}
+                lookAt={[20, -20, 20]}
+              />
+              <Model />
+              <OrbitControls
+                enablePan={true}
+                enableZoom={true}
+                enableRotate={true}
+              />
+            </Suspense>
+          </Canvas>
+        </Box>
+      </div>
 
       <Chart
         palette="Violet"

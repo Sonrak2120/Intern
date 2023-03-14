@@ -23,7 +23,7 @@ const ThemeRoutes = [
       { path: "Plot", exact: true, element: <Plot /> },
       // { path: "plot", element: <Plot /> },
       { path: "/Sit-Survay", element: <SiteSurvay /> },
-      { path: "/test", element: <Test3 /> },
+      { path: "/test", element: <Dashboard1 /> },
       { path: "/Tab2", element: <Tab2 /> },
       // { path: "/form-elements/button", element: <ExButton /> },
       // { path: "/form-elements/checkbox", element: <ExCheckbox /> },
