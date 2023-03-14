@@ -79,8 +79,8 @@ function Model(props) {
     return (
       <group {...props} dispose={null}>
         <mesh
-          geometry={nodes.Cylinder.geometry}
-          material={materials["Material.003"]}
+          geometry={props.nodes.Cylinder.geometry}
+          material={props.materials["Material.003"]}
           position={[-81, 10.58, 80]}
           scale={[0.4, 10.57, 0.4]}
         />
@@ -958,7 +958,7 @@ function Model(props) {
                 intensity={0.75}
                 lookAt={[20, -20, 20]}
               />
-              <Model />
+              <Model nodes = {nodes} material = {materials}/>
               <OrbitControls
                 enablePan={true}
                 enableZoom={true}
