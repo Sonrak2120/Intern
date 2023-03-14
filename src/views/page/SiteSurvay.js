@@ -68,12 +68,12 @@ function SiteSurvay() {
   const [change_model, setchange_model] = useState(true);
   const [nodes, setnodes] = useState({});
   const [materials_nodes, setmaterials_nodes] = useState(useGLTF("/room_uv.gltf"));
-  useEffect(() => {
-    setmaterials_nodes(useGLTF("/room_uv.gltf")) ;
-    console.log("materials_nodes")
-    console.log(materials_nodes)
+  // useEffect(() => {
     
-  }, [change_model]);
+  //   console.log("materials_nodes")
+  //   console.log(materials_nodes)
+    
+  // }, [change_model]);
 function Model(props) {
    
     return (
@@ -268,6 +268,7 @@ function Model(props) {
     console.log(response.data);
     setLoading(false);
     setchange_model(!change_model);
+    setmaterials_nodes(useGLTF("/room_uv.gltf")) ;
     setData(response.data);
     if (reqOptions.data.message == "success") {
       setOpen6(true);
