@@ -62,33 +62,43 @@ const TextFieldCustom = styled(TextField)(({ them }) => ({
 const RIS = ["D", "U", "C"];
 const DSC = ["R", "U", "B"];
 
-export function Model(props) {
-  const { nodes, materials } = useGLTF("/room_uv.gltf");
-  return (
-    <group {...props} dispose={null}>
-      <mesh
-        geometry={nodes.Cylinder.geometry}
-        material={materials["Material.003"]}
-        position={[-81, 10.58, 80]}
-        scale={[0.4, 10.57, 0.4]}
-      />
-      <mesh
-        geometry={nodes.Plane002.geometry}
-        material={nodes.Plane002.material}
-        position={[-81, 0, 0]}
-        scale={[20, 1, 81]}
-      />
-      <mesh
-        geometry={nodes.Plane003.geometry}
-        material={materials.Material}
-        position={[20, 0, 0]}
-        scale={[81, 1, 81]}
-      />
-    </group>
-  );
-}
+
 
 function SiteSurvay() {
+  const [change_model, setchange_model] = useState(true);
+function Model(props) {
+    let nodes
+    let materials 
+    useEffect(() => {
+    const { nodes_, materials_ } = useGLTF("/room_uv.gltf");
+    nodes = nodes_
+    materials = materials_
+    }, [change_model]);
+    return (
+      <group {...props} dispose={null}>
+        <mesh
+          geometry={nodes.Cylinder.geometry}
+          material={materials["Material.003"]}
+          position={[-81, 10.58, 80]}
+          scale={[0.4, 10.57, 0.4]}
+        />
+        <mesh
+          geometry={nodes.Plane002.geometry}
+          material={nodes.Plane002.material}
+          position={[-81, 0, 0]}
+          scale={[20, 1, 81]}
+        />
+        <mesh
+          geometry={nodes.Plane003.geometry}
+          material={materials.Material}
+          position={[20, 0, 0]}
+          scale={[81, 1, 81]}
+        />
+      </group>
+    );
+  }
+
+
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
@@ -255,6 +265,7 @@ function SiteSurvay() {
     let response = reqOptions;
     console.log(response.data);
     setLoading(false);
+    setchange_model(!change_model);
     setData(response.data);
     if (reqOptions.data.message == "success") {
       setOpen6(true);
