@@ -67,10 +67,11 @@ const DSC = ["R", "U", "B"];
 function SiteSurvay() {
   const [change_model, setchange_model] = useState(true);
   const [nodes, setnodes] = useState({});
-  const [materials_nodes, setmaterials_nodes] = useState();
+  const [materials_nodes, setmaterials_nodes] = useState(useGLTF("/room_uv.gltf"));
   useEffect(() => {
     setmaterials_nodes(useGLTF("/room_uv.gltf")) ;
-    console.log("materials_nodes",materials_nodes)
+    console.log("materials_nodes")
+    console.log(materials_nodes)
     
   }, [change_model]);
 function Model(props) {
