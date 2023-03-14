@@ -67,12 +67,10 @@ const DSC = ["R", "U", "B"];
 function SiteSurvay() {
   const [change_model, setchange_model] = useState(true);
 function Model(props) {
-    let nodes
-    let materials 
+    const { nodes, materials} = useGLTF("/room_uv.gltf");
     useEffect(() => {
-    const { nodes_, materials_ } = useGLTF("/room_uv.gltf");
-    nodes = nodes_
-    materials = materials_
+      // update the model
+      
     }, [change_model]);
     return (
       <group {...props} dispose={null}>
