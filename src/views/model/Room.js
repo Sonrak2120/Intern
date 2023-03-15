@@ -106,23 +106,53 @@ function Room(props) {
               lookAt={[20, -20, 20]}
             />
             <group {...props} dispose={null}>
+              <group position={[0, 10, 82]} scale={[101, 10, 1]}>
+                <mesh
+                  geometry={nodes.Cube009.geometry}
+                  material={materials["Material.005"]}
+                />
+                <mesh
+                  geometry={nodes.Cube009_1.geometry}
+                  material={materials["Material.006"]}
+                />
+                <mesh
+                  geometry={nodes.Cube009_2.geometry}
+                  material={materials.Material}
+                />
+              </group>
               <mesh
-                geometry={nodes.Cylinder.geometry}
-                material={materials["Material.003"]}
-                position={[x, y + 10.58, z]}
+                geometry={nodes.Cylinder001.geometry}
+                material={materials["Material.009"]}
+                position={[x, 10 + 10.58, z]} //เสา
                 scale={[0.4, 10.57, 0.4]}
               />
               <mesh
-                geometry={nodes.Plane002.geometry}
-                material={nodes.Plane002.material}
-                position={[-81, 0, 0]}
-                scale={[20, 1, 81]}
+                geometry={nodes.Sphere001.geometry}
+                material={nodes.Sphere001.material}
+                position={[x, 10 + 21.33, z]} //joint
               />
               <mesh
-                geometry={nodes.Plane003.geometry}
-                material={materials.Material}
-                position={[20, 0, 0]}
-                scale={[81, 1, 81]}
+                geometry={nodes.Cube013.geometry}
+                material={materials["Material.008"]}
+                position={[x, 10 + 21.75, z]} //แผ่น
+                scale={[0.1, 10, 10]}
+              />
+              <mesh
+                geometry={nodes.Sphere005.geometry}
+                material={nodes.Sphere005.material}
+                position={[0, 21.33, 0]}
+              />
+              <mesh
+                geometry={nodes.Cylinder005.geometry}
+                material={materials["Material.010"]}
+                position={[0, 10.58, 0]}
+                scale={[0.4, 10.57, 0.4]}
+              />
+              <mesh
+                geometry={nodes.Cube020.geometry}
+                material={materials["Material.010"]}
+                position={[0, 22.63, 0]}
+                scale={[4.07, 2, 2]}
               />
             </group>
             <OrbitControls

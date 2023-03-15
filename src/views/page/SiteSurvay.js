@@ -62,45 +62,34 @@ const TextFieldCustom = styled(TextField)(({ them }) => ({
 const RIS = ["D", "U", "C"];
 const DSC = ["R", "U", "B"];
 
+// export function Model(props) {
+//   const { nodes, materials } = useGLTF("/room_uv.gltf");
+//   return (
+//     <group {...props} dispose={null}>
+//       <mesh
+//         geometry={nodes.Cylinder.geometry}
+//         material={materials["Material.003"]}
+//         position={[-81, 10.58, 80]}
+//         scale={[0.4, 10.57, 0.4]}
+//       />
+//       <mesh
+//         geometry={nodes.Plane002.geometry}
+//         material={nodes.Plane002.material}
+//         position={[-81, 0, 0]}
+//         scale={[20, 1, 81]}
+//       />
+//       <mesh
+//         geometry={nodes.Plane003.geometry}
+//         material={materials.Material}
+//         position={[20, 0, 0]}
+//         scale={[81, 1, 81]}
+//       />
+//     </group>
+//   );
+// }
 
-
-function SiteSurvay() {
-  const [change_model, setchange_model] = useState(true);
-  const [nodes, setnodes] = useState({});
-  const [materials_nodes, setmaterials_nodes] = useState(useGLTF("/room_uv.gltf"));
-  // useEffect(() => {
-    
-  //   console.log("materials_nodes")
-  //   console.log(materials_nodes)
-    
-  // }, [change_model]);
-function Model(props) {
-   
-    return (
-      <group {...props} dispose={null}>
-        <mesh
-          geometry={materials_nodes.nodes.Cylinder.geometry}
-          material={materials_nodes.materials["Material.003"]}
-          position={[-81, 10.58, 80]}
-          scale={[0.4, 10.57, 0.4]}
-        />
-        <mesh
-          geometry={materials_nodes.nodes.Plane002.geometry}
-          material={materials_nodes.nodes.Plane002.material}
-          position={[-81, 0, 0]}
-          scale={[20, 1, 81]}
-        />
-        <mesh
-          geometry={materials_nodes.nodes.Plane003.geometry}
-          material={materials_nodes.materials.Material}
-          position={[20, 0, 0]}
-          scale={[81, 1, 81]}
-        />
-      </group>
-    );
-  }
-
-
+function SiteSurvay(props) {
+  const { nodes, materials } = useGLTF("/room_uv.gltf");
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
@@ -267,8 +256,6 @@ function Model(props) {
     let response = reqOptions;
     console.log(response.data);
     setLoading(false);
-    setchange_model(!change_model);
-    setmaterials_nodes(useGLTF("/room_uv.gltf")) ;
     setData(response.data);
     if (reqOptions.data.message == "success") {
       setOpen6(true);
@@ -927,48 +914,148 @@ function Model(props) {
         </div>
       </form>
 
-      <div style={{ marginTop: "50px", backgroundColor: "white" }}>
-        <Typography>กราฟ</Typography>
-        <Box
+      <Box
+        style={{
+          marginTop: "50px",
+          backgroundColor: "white",
+          width: "100%",
+          height: "100%",
+          paddingBottom: "50px",
+        }}
+      >
+        <Typography
           sx={{
             // margin: "auto",
-            mt: "50px",
-            ml: "50px",
-            mr: "50px",
-            mb: "50px",
-            backgroundColor: "white",
-            // width: "100%",
-            borderRadius: "7px",
-            border: 2,
+            display: "flex",
+            justifyContent: "center",
+            padding: "50px",
           }}
+          variant="h2"
         >
-          {" "}
-          <Canvas
-            camera={{ fov: 60, position: [0, 180, 50] }}
-            style={{ height: "550px" }}
-          >
-            <Suspense fallback={null}>
-              <ambientLight />
-              <directionalLight
-                position={[1, 1, 1]}
-                intensity={0.75}
-                lookAt={[20, -20, 20]}
-              />
-              <directionalLight
-                position={[-1, 0, -1]}
-                intensity={0.75}
-                lookAt={[20, -20, 20]}
-              />
-              <Model />
-              <OrbitControls
-                enablePan={true}
-                enableZoom={true}
-                enableRotate={true}
-              />
-            </Suspense>
-          </Canvas>
+          Average Received Power
+        </Typography>
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid2 container spacing={0.5}>
+            <Grid2 xs={10.5}>
+              <Box
+                sx={{
+                  // margin: "auto",
+
+                  ml: "50px",
+                  mr: "50px",
+                  backgroundColor: "#1a97f5",
+                  // width: "100%",
+                  borderRadius: "7px",
+                  border: 2,
+                }}
+              >
+                {" "}
+                <Canvas
+                  camera={{ fov: 60, position: [0, 180, 50] }}
+                  style={{ height: "550px", width: "100%" }}
+                >
+                  <Suspense fallback={null}>
+                    <ambientLight />
+                    <directionalLight
+                      position={[1, 1, 1]}
+                      intensity={0.75}
+                      lookAt={[20, -20, 20]}
+                    />
+                    <directionalLight
+                      position={[-1, 0, -1]}
+                      intensity={0.75}
+                      lookAt={[20, -20, 20]}
+                    />
+                    {/* <Model /> */}
+                    <group {...props} dispose={null}>
+                      <group position={[0, 10, 82]} scale={[101, 10, 1]}>
+                        <mesh
+                          geometry={nodes.Cube009.geometry}
+                          material={materials["Material.005"]}
+                        />
+                        <mesh
+                          geometry={nodes.Cube009_1.geometry}
+                          material={materials["Material.006"]}
+                        />
+                        <mesh
+                          geometry={nodes.Cube009_2.geometry}
+                          material={materials.Material}
+                        />
+                      </group>
+                      <mesh
+                        geometry={nodes.Cylinder001.geometry}
+                        material={materials["Material.009"]}
+                        position={[
+                          dataplot.x_IRS,
+                          dataplot.y_IRS + 10.58,
+                          dataplot.z_IRS,
+                        ]}
+                        scale={[0.4, 10.57, 0.4]}
+                      />
+                      <mesh
+                        geometry={nodes.Sphere001.geometry}
+                        material={nodes.Sphere001.material}
+                        position={[
+                          dataplot.x_IRS,
+                          dataplot.y_IRS + 21.33,
+                          dataplot.z_IRS,
+                        ]}
+                      />
+                      <mesh
+                        geometry={nodes.Cube013.geometry}
+                        material={materials["Material.008"]}
+                        position={[
+                          dataplot.x_IRS,
+                          dataplot.y_IRS + 21.75,
+                          dataplot.z_IRS,
+                        ]}
+                        scale={[0.1, 10, 10]}
+                      />
+                      <mesh
+                        geometry={nodes.Sphere005.geometry}
+                        material={nodes.Sphere005.material}
+                        position={[
+                          dataplot.x_BS,
+                          dataplot.y_BS + 21.33,
+                          dataplot.z_BS,
+                        ]} //jointhorn {X,Y,Z}
+                      />
+                      <mesh
+                        geometry={nodes.Cylinder005.geometry}
+                        material={materials["Material.010"]}
+                        position={[
+                          dataplot.x_BS,
+                          dataplot.y_BS + 10.58,
+                          dataplot.z_BS,
+                        ]} //hornเสา
+                        scale={[0.4, 10.57, 0.4]}
+                      />
+                      <mesh
+                        geometry={nodes.Cube020.geometry}
+                        material={materials["Material.010"]}
+                        position={[
+                          dataplot.x_BS,
+                          dataplot.y_BS + 22.63,
+                          dataplot.z_BS,
+                        ]} //horn
+                        scale={[4.07, 2, 2]}
+                      />
+                    </group>
+                    <OrbitControls
+                      enablePan={true}
+                      enableZoom={true}
+                      enableRotate={true}
+                    />
+                  </Suspense>
+                </Canvas>
+              </Box>
+            </Grid2>
+            <Grid2 xs={1.5}>
+              <img src={"http://127.0.0.1:5000/pclor_img/my_cbarplot.png"} />
+            </Grid2>
+          </Grid2>
         </Box>
-      </div>
+      </Box>
 
       <Chart
         palette="Violet"
