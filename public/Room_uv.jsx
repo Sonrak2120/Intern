@@ -10,17 +10,21 @@ export function Model(props) {
   const { nodes, materials } = useGLTF('/room_uv.gltf')
   return (
     <group {...props} dispose={null}>
+      <group position={[-0.68, -0.41, -0.14]} rotation={[Math.PI, 0, Math.PI]}>
+        <mesh geometry={nodes.Sphere001_1.geometry} material={nodes.Sphere001_1.material} position={[0, 21.33, 0]} />
+        <mesh geometry={nodes.Cube013_1.geometry} material={materials['Material.008']} position={[0.94, 21.75, 0]} scale={[0.1, 10, 10]} />
+        <mesh geometry={nodes.Cylinder001.geometry} material={materials['Material.009']} position={[0, 10.58, 0]} scale={[0.4, 10.57, 0.4]} />
+      </group>
+      <group position={[0, 0, 9.85]}>
+        <mesh geometry={nodes.Cube020_1.geometry} material={materials['Material.010']} position={[0, 22.63, 0]} rotation={[-Math.PI, 0, -Math.PI]} scale={[4.07, 2, 2]} />
+        <mesh geometry={nodes.Sphere005.geometry} material={nodes.Sphere005.material} position={[0, 21.33, 0]} />
+        <mesh geometry={nodes.Cylinder005.geometry} material={materials['Material.010']} position={[0, 10.58, 0]} scale={[0.4, 10.57, 0.4]} />
+      </group>
       <group position={[0, 10, 82]} scale={[101, 10, 1]}>
         <mesh geometry={nodes.Cube009.geometry} material={materials['Material.005']} />
         <mesh geometry={nodes.Cube009_1.geometry} material={materials['Material.006']} />
         <mesh geometry={nodes.Cube009_2.geometry} material={materials.Material} />
       </group>
-      <mesh geometry={nodes.Cylinder001.geometry} material={materials['Material.009']} position={[0, 10.58, 0]} scale={[0.4, 10.57, 0.4]} />
-      <mesh geometry={nodes.Sphere001.geometry} material={nodes.Sphere001.material} position={[0, 21.33, 0]} />
-      <mesh geometry={nodes.Cube013.geometry} material={materials['Material.008']} position={[0.94, 21.75, 0]} scale={[0.1, 10, 10]} />
-      <mesh geometry={nodes.Sphere005.geometry} material={nodes.Sphere005.material} position={[0, 21.33, 0]} />
-      <mesh geometry={nodes.Cylinder005.geometry} material={materials['Material.010']} position={[0, 10.58, 0]} scale={[0.4, 10.57, 0.4]} />
-      <mesh geometry={nodes.Cube020.geometry} material={materials['Material.010']} position={[0, 22.63, 0]} scale={[4.07, 2, 2]} />
     </group>
   )
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
@@ -7,7 +7,6 @@ import TextField from "@mui/material/TextField";
 import { styled, Button, Select, MenuItem } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
-import ColorMap from "../model/ColorMap";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Snackbar from "@mui/material/Snackbar";
@@ -28,30 +27,19 @@ import {
   Legend,
   Margin,
   Title,
-  Subtitle,
   Tooltip,
   Grid,
-  Label,
   ValueAxis,
   Point,
-  Size,
-  Format,
 } from "devextreme-react/chart";
-// import service from "../data2";
-import service from "../page/data";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 
-const countriesInfo = service.getCountriesInfo();
-const energySources = service.getEnergySources();
-// const types = ["line", "stackedline", "fullstackedline"];
 export const types = [{ val: "SSE", name: "SSE" }];
 export const types2 = [{ val: "PRx", name: "PRx" }];
 export const types3 = [{ val: "BER", name: "BER" }];
 
 const TextFieldCustom = styled(TextField)(({ them }) => ({
   "& .css-1m3yc3-MuiInputBase-root-MuiOutlinedInput-root": {
-    // borderRadius: "20px",
-    // border: "2px solid white",
     height: 40,
     alignItems: "center",
     justifyContent: "center",
@@ -62,38 +50,12 @@ const TextFieldCustom = styled(TextField)(({ them }) => ({
 const RIS = ["D", "U", "C"];
 const DSC = ["R", "U", "B"];
 
-// export function Model(props) {
-//   const { nodes, materials } = useGLTF("/room_uv.gltf");
-//   return (
-//     <group {...props} dispose={null}>
-//       <mesh
-//         geometry={nodes.Cylinder.geometry}
-//         material={materials["Material.003"]}
-//         position={[-81, 10.58, 80]}
-//         scale={[0.4, 10.57, 0.4]}
-//       />
-//       <mesh
-//         geometry={nodes.Plane002.geometry}
-//         material={nodes.Plane002.material}
-//         position={[-81, 0, 0]}
-//         scale={[20, 1, 81]}
-//       />
-//       <mesh
-//         geometry={nodes.Plane003.geometry}
-//         material={materials.Material}
-//         position={[20, 0, 0]}
-//         scale={[81, 1, 81]}
-//       />
-//     </group>
-//   );
-// }
-
 function SiteSurvay(props) {
   const { nodes, materials } = useGLTF("/room_uv.gltf");
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
-  const [open, setOpen] = React.useState(false);
+
   const [open2, setOpen2] = React.useState(false);
   const [open3, setOpen3] = React.useState(false);
   const [open4, setOpen4] = React.useState(false);
@@ -113,7 +75,6 @@ function SiteSurvay(props) {
     };
     reader.readAsDataURL(fileupload);
   };
-  // console.log("data_ris", da);
 
   const handledownload = () => {
     var a = document.createElement("a");
@@ -122,14 +83,7 @@ function SiteSurvay(props) {
     a.click();
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleClose2 = (event, reason) => {
+  const handleClose2 = (reason) => {
     if (reason === "clickaway") {
       return;
     }
@@ -143,8 +97,7 @@ function SiteSurvay(props) {
     setOpen8(false);
     setOpenalert(false);
   };
-  const uploadfile = async (event) => {
-    setOpen(false);
+  const uploadfile = async () => {
     setLoading(true);
 
     let headersList = {
@@ -163,25 +116,20 @@ function SiteSurvay(props) {
       data: bodyContent,
     });
     let response = reqOptions;
-    // console.log(response.data.data_ris);
     setdata_ris(response.data.data_ris);
     setLoading(false);
-    if (reqOptions.data.message == "success") {
+    if (reqOptions.data.message === "success") {
       setOpen2(true);
-    } else if (reqOptions.data.message == "File is not square matrix") {
+    } else if (reqOptions.data.message === "File is not square matrix") {
       setOpen3(true);
-    } else if (reqOptions.data.message == "Please upload excel file") {
+    } else if (reqOptions.data.message === "Please upload excel file") {
       setOpen4(true);
     } else {
       setOpenalert(true);
     }
   };
 
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm();
+  const { handleSubmit, control } = useForm();
 
   const [x_BS, setx_BS] = React.useState([]);
   const [y_BS, sety_BS] = React.useState([]);
@@ -189,7 +137,6 @@ function SiteSurvay(props) {
   const [x_IRS, setx_IRS] = React.useState([]);
   const [y_IRS, sety_IRS] = React.useState([]);
   const [z_IRS, setz_IRS] = React.useState([]);
-  const [lightspeed, setlightspeed] = React.useState([]);
   const [fc, setfc] = React.useState([]);
   const [bs_an, setbs_an] = React.useState([]);
   const [DSC_type, setDSC_type] = React.useState([]);
@@ -206,11 +153,11 @@ function SiteSurvay(props) {
   const [n_elm, setn_elm] = React.useState([]);
   const [Bw, setBw] = React.useState([]);
   const [N_UE, setN_UE] = React.useState([]);
-  const [ue_an, setue_an] = React.useState([]);
+  const [setue_an] = React.useState([]);
   const [data_ris, setdata_ris] = React.useState([]);
   const [dataplot, setData] = React.useState("");
 
-  const handleSubmits = async (event) => {
+  const handleSubmits = async () => {
     setLoading(true);
     let headersList = {
       Accept: "application/json",
@@ -222,7 +169,6 @@ function SiteSurvay(props) {
       x_IRS: parseFloat(x_IRS),
       y_IRS: parseFloat(y_IRS),
       z_IRS: parseFloat(z_IRS),
-      lightspeed: parseFloat(lightspeed),
       fc: parseFloat(fc),
       bs_an: parseFloat(bs_an),
       DSC_type: DSC_type,
@@ -243,8 +189,6 @@ function SiteSurvay(props) {
       data_ris: data_ris,
     };
 
-    // console.log(data_ris);
-
     let bodyContent = data;
 
     const reqOptions = await axios({
@@ -254,28 +198,25 @@ function SiteSurvay(props) {
       data: bodyContent,
     });
     let response = reqOptions;
-    console.log(response.data);
     setLoading(false);
     setData(response.data);
-    if (reqOptions.data.message == "success") {
+    if (reqOptions.data.message === "success") {
       setOpen6(true);
-      // window.location.reload("Refresh");
     } else if (
-      reqOptions.data.message == "Please check your location parameter"
+      reqOptions.data.message === "Please check your location parameter"
     ) {
       setOpen7(true);
     } else if (
-      reqOptions.data.message ==
+      reqOptions.data.message ===
       "Please check your RIS file and number of element parameter"
     ) {
       setOpen8(true);
-    } else if (reqOptions.data.message == "Please upload RIS data file") {
+    } else if (reqOptions.data.message === "Please upload RIS data file") {
       setOpen5(true);
     } else {
       setOpenalert(true);
     }
   };
-  console.log("dataplot==", dataplot);
 
   const onSubmit = (data) => {
     handleSubmits(data);
@@ -305,13 +246,7 @@ function SiteSurvay(props) {
             alignItems="center"
             spacing={5}
           >
-            <Grid2
-              container
-              direction="row"
-              // justifyContent="center"
-              // alignItems="center"
-              spacing={5}
-            >
+            <Grid2 container direction="row" spacing={5}>
               <Grid2>
                 <Box
                   sx={{
@@ -335,19 +270,6 @@ function SiteSurvay(props) {
                     Parameter Main
                   </Typography>
                   <Stack spacing={1.5}>
-                    {/* <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="lightspeed"
-                      label="lightspeed"
-                      onChange={(e) => setlightspeed(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="lightspeed"
-                  control={control}
-                  defaultValue=""
-                /> */}
                     <Controller
                       render={({ field: { onChange } }) => (
                         <TextFieldCustom
@@ -498,13 +420,7 @@ function SiteSurvay(props) {
                 </Box>
               </Grid2>
             </Grid2>
-            <Grid2
-              container
-              direction="row"
-              // justifyContent="center"
-              // alignItems="center"
-              spacing={10}
-            >
+            <Grid2 container direction="row" spacing={10}>
               <Grid2>
                 <Box
                   sx={{
@@ -528,19 +444,6 @@ function SiteSurvay(props) {
                     Parameter Channel
                   </Typography>
                   <Stack spacing={1.5}>
-                    {/* <Controller
-                      render={({ field: { onChange } }) => (
-                        <TextFieldCustom
-                          id="DSC_type"
-                          label="Dedicated subcarriers type"
-                          onChange={(e) => setDSC_type(e.target.value)}
-                          required
-                        />
-                      )}
-                      name="DSC_type"
-                      control={control}
-                      defaultValue=""
-                    /> */}
                     <Controller
                       render={({ field: { onChange } }) => (
                         <Box>
@@ -750,19 +653,6 @@ function SiteSurvay(props) {
                       control={control}
                       defaultValue=""
                     />
-                    {/* <Controller
-                      render={({ field: { onChange } }) => (
-                        <TextFieldCustom
-                          id="IRS_type"
-                          label="Reconfigurable smart surface type"
-                          onChange={(e) => setIRS_type(e.target.value)}
-                          required
-                        />
-                      )}
-                      name="IRS_type"
-                      control={control}
-                      defaultValue=""
-                    /> */}
 
                     <Controller
                       render={({ field: { onChange } }) => (
@@ -839,7 +729,7 @@ function SiteSurvay(props) {
                           </Button>
                           <div style={{ display: "flex" }}>
                             {(() => {
-                              if (filezip == "") {
+                              if (filezip === "") {
                                 return (
                                   <div
                                     style={{
@@ -968,6 +858,54 @@ function SiteSurvay(props) {
                     />
                     {/* <Model /> */}
                     <group {...props} dispose={null}>
+                      <group
+                        position={[
+                          dataplot.x_IRS,
+                          dataplot.y_IRS,
+                          dataplot.z_IRS,
+                        ]}
+                        rotation={[Math.PI, 0, Math.PI]}
+                      >
+                        <mesh
+                          geometry={nodes.Sphere001_1.geometry}
+                          material={nodes.Sphere001_1.material}
+                          position={[0, 21.33, 0]}
+                        />
+                        <mesh
+                          geometry={nodes.Cube013_1.geometry}
+                          material={materials["Material.008"]}
+                          position={[0.94, 21.75, 0]}
+                          scale={[0.1, 10, 10]}
+                        />
+                        <mesh
+                          geometry={nodes.Cylinder001.geometry}
+                          material={materials["Material.009"]}
+                          position={[0, 10.58, 0]}
+                          scale={[0.4, 10.57, 0.4]}
+                        />
+                      </group>
+                      <group
+                        position={[dataplot.x_BS, dataplot.y_BS, dataplot.z_BS]}
+                        rotation={[-Math.PI, 0, -Math.PI]}
+                      >
+                        <mesh
+                          geometry={nodes.Cube020_1.geometry}
+                          material={materials["Material.010"]}
+                          position={[0, 22.63, 0]}
+                          scale={[4.07, 2, 2]}
+                        />
+                        <mesh
+                          geometry={nodes.Sphere005.geometry}
+                          material={nodes.Sphere005.material}
+                          position={[0, 21.33, 0]}
+                        />
+                        <mesh
+                          geometry={nodes.Cylinder005.geometry}
+                          material={materials["Material.010"]}
+                          position={[0, 10.58, 0]}
+                          scale={[0.4, 10.57, 0.4]}
+                        />
+                      </group>
                       <group position={[0, 10, 82]} scale={[101, 10, 1]}>
                         <mesh
                           geometry={nodes.Cube009.geometry}
@@ -982,64 +920,6 @@ function SiteSurvay(props) {
                           material={materials.Material}
                         />
                       </group>
-                      <mesh
-                        geometry={nodes.Cylinder001.geometry}
-                        material={materials["Material.009"]}
-                        position={[
-                          dataplot.x_IRS,
-                          dataplot.y_IRS + 10.58,
-                          dataplot.z_IRS,
-                        ]}
-                        scale={[0.4, 10.57, 0.4]}
-                      />
-                      <mesh
-                        geometry={nodes.Sphere001.geometry}
-                        material={nodes.Sphere001.material}
-                        position={[
-                          dataplot.x_IRS,
-                          dataplot.y_IRS + 21.33,
-                          dataplot.z_IRS,
-                        ]}
-                      />
-                      <mesh
-                        geometry={nodes.Cube013.geometry}
-                        material={materials["Material.008"]}
-                        position={[
-                          dataplot.x_IRS,
-                          dataplot.y_IRS + 21.75,
-                          dataplot.z_IRS,
-                        ]}
-                        scale={[0.1, 10, 10]}
-                      />
-                      <mesh
-                        geometry={nodes.Sphere005.geometry}
-                        material={nodes.Sphere005.material}
-                        position={[
-                          dataplot.x_BS,
-                          dataplot.y_BS + 21.33,
-                          dataplot.z_BS,
-                        ]} //jointhorn {X,Y,Z}
-                      />
-                      <mesh
-                        geometry={nodes.Cylinder005.geometry}
-                        material={materials["Material.010"]}
-                        position={[
-                          dataplot.x_BS,
-                          dataplot.y_BS + 10.58,
-                          dataplot.z_BS,
-                        ]} //hornเสา
-                        scale={[0.4, 10.57, 0.4]}
-                      />
-                      <mesh
-                        geometry={nodes.Cube020.geometry}
-                        material={materials["Material.010"]}
-                        position={[
-                          dataplot.x_BS,
-                          dataplot.y_BS + 22.63,
-                          dataplot.z_BS,
-                        ]} //horn
-                        scale={[4.07, 2, 2]}
-                      />
                     </group>
                     <OrbitControls
                       enablePan={true}
@@ -1194,12 +1074,6 @@ function SiteSurvay(props) {
         </Title>
         <Tooltip enabled={true} />
       </Chart>
-
-      {/* {console.log(zz)} */}
-
-      {/* <Stack>
-          <ColorMap />
-        </Stack> */}
       <Snackbar
         open={open2}
         autoHideDuration={5000}

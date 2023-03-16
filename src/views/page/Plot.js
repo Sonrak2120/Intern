@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Box from "@mui/material/Box";
 import axios from "axios";
@@ -6,17 +6,14 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 
-import { styled, Button, Select, MenuItem } from "@mui/material";
+import { Button, Select, MenuItem } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
-import service from "./data";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-
-import { createSlice } from "@reduxjs/toolkit";
 
 import {
   PolarChart,
@@ -26,29 +23,19 @@ import {
   Legend,
   Point,
   Tooltip,
-  // CommonSeriesSettings,
 } from "devextreme-react/polar-chart";
 import {
   Chart,
-  // Series,
-  // ArgumentAxis,
   CommonSeriesSettings,
-  // Export,
-  // Legend,
   Margin,
   Title,
-  Subtitle,
   Size,
-  // Tooltip,
   Grid,
-  Label,
   ValueAxis,
 } from "devextreme-react/chart";
 import Stack from "@mui/material/Stack";
 import { TextField, Typography } from "@mui/material";
 
-// const dataSource = service.getdataSource();
-// const dg2 = service.getdg();
 export const types = [{ val: "dBm", name: "dBm" }];
 
 function Plot() {
@@ -59,13 +46,7 @@ function Plot() {
   const [openalert, setOpenalert] = React.useState(false);
   const [dataplot, setData] = React.useState("");
 
-  const handleClick2 = () => {
-    setOpen2(true);
-    setOpen3(true);
-    setOpenalert(true);
-  };
-
-  const handleClose2 = (event, reason) => {
+  const handleClose2 = (reason) => {
     if (reason === "clickaway") {
       return;
     }
@@ -79,11 +60,7 @@ function Plot() {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm();
+  const { handleSubmit, control } = useForm();
 
   const [filezip, setfilezip] = useState("");
   const handleUploadxlxs = (e) => {
@@ -94,7 +71,6 @@ function Plot() {
     };
     reader.readAsDataURL(fileupload);
   };
-  // console.log("ffile_zip", filezip);
 
   const handledownload = () => {
     var a = document.createElement("a");
@@ -122,7 +98,6 @@ function Plot() {
     formdata.append("file_zip", filezip);
     let bodyContent = formdata;
     const reqOptions = await axios({
-      method: "post",
       url: "http://127.0.0.1:5000/plot",
       method: "POST",
       headers: headersList,
@@ -131,22 +106,16 @@ function Plot() {
     let response = reqOptions;
     console.log(response.data);
     setData(response.data);
-    if (reqOptions.data.message == "File uploaded successfully") {
+    if (reqOptions.data.message === "File uploaded successfully") {
       setOpen2(true);
-      // window.location.reload("Refresh");
-    } else if (reqOptions.data.message == "invalid degree position") {
+    } else if (reqOptions.data.message === "invalid degree position") {
       setOpen3(true);
-      // window.location.reload("Refresh");
-    } else if (reqOptions.data.message == "File extension not allowed") {
+    } else if (reqOptions.data.message === "File extension not allowed") {
       setOpen4(true);
-      // window.location.reload("Refresh");
     } else {
       setOpenalert(true);
-      // console.log("ผิดพลาด", reqOptions.data.message);
-      // window.location.reload("Refresh");
     }
   };
-  // console.log(open2);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -159,7 +128,6 @@ function Plot() {
   const [split, setsplit] = useState("");
   const [degree, setdegree] = useState("");
   const [freq, setfreq] = useState("");
-  const [degree_type, setdegree_type] = React.useState([]);
   const degreeType = ["หน้าชื่อไฟล์", "หลังชื่อไฟล์"];
 
   const onSubmit = (data) => {
@@ -168,7 +136,6 @@ function Plot() {
   return (
     <div>
       {console.log(dataplot.polar_plot)}
-      {/* {console.log("types= ", types.val)} */}
       <div style={{ marginTop: "20px" }}>
         <Grid2 container justifyContent="center" spacing={6}>
           <Grid2>
@@ -206,19 +173,13 @@ function Plot() {
                   <Point symbol="circle" size={6} />
                 </Series>
               ))}
-              <ValueAxis
-                title="dBm"
-                //   linearThreshold={-3}
-                // type="logarithmic"
-                pane="top"
-              />
+              <ValueAxis title="dBm" pane="top" />
 
               <Margin bottom={20} />
               <ArgumentAxis
                 title="Degree"
                 valueMarginsEnabled={false}
                 discreteAxisDivisionMode="crossLabels"
-                // inverted={true}
                 tickInterval={30}
               >
                 <Grid visible={true}></Grid>
@@ -230,15 +191,12 @@ function Plot() {
               />
               <Export enabled={true} />
               <Legend visible={false} />
-              <Title text="Cartesian Plot">
-                {/* <Subtitle text="(Millions of Tons, Oil Equivalent)" /> */}
-              </Title>
+              <Title text="Cartesian Plot"></Title>
               <Tooltip enabled={true} />
             </Chart>
           </Grid2>
         </Grid2>
       </div>
-      {/* <Test2 /> */}
       <div
         style={{
           display: "flex",
@@ -264,11 +222,7 @@ function Plot() {
             </DialogTitle>
             <DialogContent>
               <Stack spacing={2} justifyContent="center" alignItems={"center"}>
-                <Stack
-                  //   direction={{ xs: "column", sm: "row" }}
-                  spacing={{ xs: 1, sm: 2, md: 2 }}
-                  sx={{ mt: 5 }}
-                >
+                <Stack spacing={{ xs: 1, sm: 2, md: 2 }} sx={{ mt: 5 }}>
                   <Controller
                     render={({ field: { onChange } }) => (
                       <TextField
@@ -283,20 +237,7 @@ function Plot() {
                     control={control}
                     defaultValue=""
                   />
-                  {/* <Controller
-                    render={({ field: { onChange } }) => (
-                      <TextField
-                        sx={{ width: "450px" }}
-                        id="cc"
-                        label="ตำแหน่ง(องศา)"
-                        onChange={(e) => setdegree(e.target.value)}
-                        required
-                      />
-                    )}
-                    name="degree"
-                    control={control}
-                    defaultValue=""
-                  /> */}
+
                   <Controller
                     render={({ field: { onChange } }) => (
                       <Box>
@@ -362,7 +303,7 @@ function Plot() {
                         </Button>
                         <div style={{ display: "flex" }}>
                           {(() => {
-                            if (filezip == "") {
+                            if (filezip === "") {
                               return (
                                 <div
                                   style={{
@@ -382,7 +323,6 @@ function Plot() {
                               return (
                                 <div
                                   style={{
-                                    // display: "flex",
                                     color: "green",
                                     alignItems: "center",
                                     justifyContent: "center",
@@ -442,7 +382,6 @@ function Plot() {
         </Snackbar>
         <Snackbar
           open={openalert}
-          // autoHideDuration={5000}
           onClose={handleClose2}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >

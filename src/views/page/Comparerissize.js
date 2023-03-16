@@ -1,8 +1,6 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { Suspense } from "react";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, useGLTF } from "@react-three/drei";
+import { useState } from "react";
+
 import TextField from "@mui/material/TextField";
 import { styled, Button, Select, MenuItem } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
@@ -26,30 +24,18 @@ import {
   Export,
   Legend,
   Margin,
-  Title,
-  Subtitle,
   Tooltip,
   Grid,
-  Label,
   ValueAxis,
-  Point,
-  Size,
-  Format,
 } from "devextreme-react/chart";
-// import service from "../data2";
-import service from "../page/data";
+
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 
-const countriesInfo = service.getCountriesInfo();
-const energySources = service.getEnergySources();
-// const types = ["line", "stackedline", "fullstackedline"];
 export const types = [{ val: "SSE", name: "SSE" }];
 export const types2 = [{ val: "se", name: "se" }];
 
 const TextFieldCustom = styled(TextField)(({ them }) => ({
   "& .css-1m3yc3-MuiInputBase-root-MuiOutlinedInput-root": {
-    // borderRadius: "20px",
-    // border: "2px solid white",
     height: 40,
     alignItems: "center",
     justifyContent: "center",
@@ -60,65 +46,10 @@ const TextFieldCustom = styled(TextField)(({ them }) => ({
 const RIS = ["D", "U", "C"];
 const DSC = ["R", "U", "B"];
 
-function Tab2() {
-  const [open, setOpen] = React.useState(false);
+function Comparerissize() {
   const [loading, setLoading] = React.useState(false);
 
-  const [filezip, setfilxls] = useState("");
-  const handleUploadxlxs = (e) => {
-    const fileupload = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setfilxls(fileupload);
-    };
-    reader.readAsDataURL(fileupload);
-  };
-  // console.log("data_ris", da);
-
-  const handledownload = () => {
-    var a = document.createElement("a");
-    a.href = window.URL.createObjectURL(filezip);
-    a.download = filezip.name;
-    a.click();
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const uploadfile = async (event) => {
-    setOpen(false);
-    setLoading(true);
-
-    let headersList = {
-      Accept: "*/*",
-    };
-    var data = {
-      file: filezip,
-    };
-    let formdata = new FormData();
-    formdata.append("file", filezip);
-    let bodyContent = formdata;
-    const reqOptions = await axios({
-      url: "http://127.0.0.1:5000/read_ris_file",
-      method: "POST",
-      headers: headersList,
-      data: bodyContent,
-    });
-    let response = reqOptions;
-    // console.log(response.data.data_ris);
-    // setdata_ris(response.data.data_ris);
-    setLoading(false);
-  };
-
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm();
+  const { handleSubmit, control } = useForm();
 
   const [x_BS, setx_BS] = React.useState([]);
   const [y_BS, sety_BS] = React.useState([]);
@@ -126,7 +57,6 @@ function Tab2() {
   const [x_IRS, setx_IRS] = React.useState([]);
   const [y_IRS, sety_IRS] = React.useState([]);
   const [z_IRS, setz_IRS] = React.useState([]);
-  const [lightspeed, setlightspeed] = React.useState([]);
   const [fc, setfc] = React.useState([]);
   const [bs_an, setbs_an] = React.useState([]);
   const [DSC_type, setDSC_type] = React.useState([]);
@@ -143,8 +73,7 @@ function Tab2() {
   const [size, setSize] = useState([0]);
   const [Bw, setBw] = React.useState([]);
   const [N_UE, setN_UE] = React.useState([]);
-  const [ue_an, setue_an] = React.useState([]);
-  const [data_ris, setdata_ris] = React.useState([]);
+  const [setue_an] = React.useState([]);
   const [dataplot, setData] = React.useState("");
 
   const [input, setInput] = useState([0]);
@@ -177,7 +106,6 @@ function Tab2() {
       x_IRS: parseFloat(x_IRS),
       y_IRS: parseFloat(y_IRS),
       z_IRS: parseFloat(z_IRS),
-      lightspeed: parseFloat(lightspeed),
       fc: parseFloat(fc),
       bs_an: parseFloat(bs_an),
       DSC_type: DSC_type,
@@ -195,7 +123,6 @@ function Tab2() {
       Bw: parseFloat(Bw),
       N_UE: parseFloat(N_UE),
       ue_an: 8,
-      // data_ris: data_ris,
     };
 
     console.log(typeof size);
@@ -213,7 +140,6 @@ function Tab2() {
     setLoading(false);
     setData(response.data);
   };
-  console.log("dataplot==", dataplot);
 
   const onSubmit = (data) => {
     handleSubmits(data);
@@ -243,13 +169,7 @@ function Tab2() {
             alignItems="center"
             spacing={5}
           >
-            <Grid2
-              container
-              direction="row"
-              // justifyContent="center"
-              // alignItems="center"
-              spacing={5}
-            >
+            <Grid2 container direction="row" spacing={5}>
               <Grid2>
                 <Box
                   sx={{
@@ -273,19 +193,6 @@ function Tab2() {
                     Parameter Main
                   </Typography>
                   <Stack spacing={1.5}>
-                    {/* <Controller
-                  render={({ field: { onChange } }) => (
-                    <TextFieldCustom
-                      id="lightspeed"
-                      label="lightspeed"
-                      onChange={(e) => setlightspeed(e.target.value)}
-                      required
-                    />
-                  )}
-                  name="lightspeed"
-                  control={control}
-                  defaultValue=""
-                /> */}
                     <Controller
                       render={({ field: { onChange } }) => (
                         <TextFieldCustom
@@ -842,53 +749,9 @@ function Tab2() {
           <Legend visible={false} />
           <Tooltip enabled={true} />
         </Chart>
-        {/* <Chart
-          palette="Violet"
-          dataSource={dataplot.data_spectral_efficiency}
-          style={{
-            backgroundColor: "white",
-            margin: "auto",
-          }}
-        >
-          <CommonSeriesSettings
-            argumentField="SNR"
-            type="line"
-            color="#16DA34"
-          />
-          {types.map((item) => (
-            <Series key={item.val} valueField={item.val} name={item.name}>
-              {" "}
-              <Point symbol="circle" size={6} />
-            </Series>
-          ))}
-          <ValueAxis
-            title="SE"
-            pane="top"
-          />
-
-          <Margin bottom={20} />
-          <ArgumentAxis
-            title="Size"
-            valueMarginsEnabled={false}
-            discreteAxisDivisionMode="crossLabels"
-            tickInterval={2}
-          >
-            <Grid visible={true}></Grid>
-          </ArgumentAxis>
-          <Legend
-            verticalAlignment="bottom"
-            horizontalAlignment="center"
-            itemTextPosition="bottom"
-          />
-          <Export enabled={true} />
-          <Legend visible={false} />
-          <Title text="RIS">
-          </Title>
-          <Tooltip enabled={true} />
-        </Chart> */}
       </div>
     </div>
   );
 }
 
-export default Tab2;
+export default Comparerissize;
